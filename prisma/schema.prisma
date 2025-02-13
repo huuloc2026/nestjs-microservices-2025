@@ -18,10 +18,13 @@ model User {
   name      String
   email     String   @unique
   password  String
+  phone     String?
   role      Role     @default(CLIENT)
+  gender    Gender  @default(OTHER)
+  avatar    String?
+  orders    Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  orders    Order[]
   cart      Cart?
 }
 
@@ -104,6 +107,12 @@ enum Role {
   MOD
   SELLER
   CLIENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }
 
 enum OrderStatus {

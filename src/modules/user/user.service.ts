@@ -4,15 +4,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  CreateUserDto,
+  UserRegistrationDTO,
+  UserUpdateDTO,
+} from 'src/modules/user/dto/user.dto';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: UserRegistrationDTO) {
+    console.log(createUserDto);
     const checkExist = await this.findExist(createUserDto.email);
     if (checkExist) {
       throw new ForbiddenException('This email is exist.');
@@ -39,7 +43,7 @@ export class UserService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UserUpdateDTO) {
     await this.findOne(id); // Ensure user exists
     return this.prisma.user.update({
       where: { id },
