@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.APP_PORT;
   const link_infor = process.env.linkgithub;
+  const link_swagger = 'swaggerui';
   app.setGlobalPrefix('v1/api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   const config = new DocumentBuilder()
@@ -27,8 +28,10 @@ async function bootstrap() {
     )
     .build(); // Build the document
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swaggerui', app, document);
+  SwaggerModule.setup(link_swagger, app, document);
   Logger.log(`Check source at ${link_infor}`);
+  Logger.log(`Check swagger at http://localhost:${port}/${link_swagger}/`);
+
   Logger.log(`[server]: Server is running at http://localhost:${port}`);
   await app.listen(port ?? 3000);
 }
