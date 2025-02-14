@@ -12,12 +12,13 @@ export abstract class BaseServiceAbstract<T extends BaseEntity>
     return await this.repository.create(create_dto);
   }
 
-  async findAll(
-    filter?: object,
-    options?: object,
-  ): Promise<FindAllResponse<T>> {
-    return await this.repository.findAll(filter, options);
-  }
+  // async findAll(
+  //   filter?: object,
+  //   options?: object,
+  // ): Promise<FindAllResponse<T>> {
+  //   return await this.repository.findAll();
+  // }
+
   async findOne(id: string) {
     return await this.repository.findOneById(id);
   }
@@ -31,6 +32,7 @@ export abstract class BaseServiceAbstract<T extends BaseEntity>
   }
 
   async remove(id: string) {
-    return await this.repository.softDelete(id);
+    return false;
+    // return await this.repository.softDelete(id);
   }
 }

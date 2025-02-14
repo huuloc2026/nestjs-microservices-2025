@@ -11,14 +11,8 @@ import {
   Min,
 } from 'class-validator';
 import { Expose, Type } from 'class-transformer';
-import { BaseEntity, BaseStatus, UserRole } from 'src/shared/data-model';
-
-// ---------------- ENUMS ----------------
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
-}
+import { BaseEntity, BaseStatus } from 'src/shared/data-model';
+import { Prisma, Gender, Role } from '@prisma/client';
 
 // ---------------- DTO ----------------
 export class UserSchema extends BaseEntity {
@@ -42,12 +36,12 @@ export class UserSchema extends BaseEntity {
   @IsString()
   avatar?: string | null;
 
-  @IsEnum(UserRole)
+  @IsEnum(Role)
   @IsOptional()
-  role: UserRole;
+  role?: Role = Role.CLIENT;
 
   @IsEnum(Gender)
   @IsOptional()
-  gender?: Gender;
+  gender?: Gender = Gender.OTHER;
 }
 export class User extends UserSchema {}

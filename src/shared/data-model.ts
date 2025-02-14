@@ -20,23 +20,16 @@ export enum BaseStatus {
   DELETED = 'deleted',
 }
 
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  MOD = 'MOD',
-  SELLER = 'SELLER',
-  CLIENT = 'CLIENT',
-}
-
 export class BaseEntity {
-  //   @IsUUID()
-  //   id: string;
-  //   @IsOptional()
-  //   @IsEnum(BaseStatus)
-  //   status?: BaseStatus;
-  //   @IsDate()
-  //   @Type(() => Date)
-  //   createdAt: Date;
-  //   @IsDate()
-  //   @Type(() => Date)
-  //   updatedAt: Date;
+  @IsUUID()
+  id: string;
+  @IsOptional()
+  @IsEnum(BaseStatus)
+  status?: BaseStatus;
+  @IsDate()
+  @Type(() => Date)
+  createdAt: Date;
+  @IsDate()
+  @Type(() => Date)
+  updatedAt: Date;
 }

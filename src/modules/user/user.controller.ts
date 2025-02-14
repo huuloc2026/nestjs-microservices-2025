@@ -12,8 +12,8 @@ import {
 import { UserService } from './user.service';
 import {
   CreateUserDto,
-  UpdateUserDto,
   UserRegistrationDTO,
+  UserUpdateDTO,
 } from './dto/user.dto';
 
 @Controller('users')
@@ -26,10 +26,10 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.userService.findAll();
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -37,7 +37,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body() updateUserDto: UserUpdateDTO) {
     return this.userService.update(id, updateUserDto);
   }
 

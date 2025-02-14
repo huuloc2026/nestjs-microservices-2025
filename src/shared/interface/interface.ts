@@ -1,8 +1,8 @@
-import { UserRole } from 'src/shared/data-model';
+import { Role } from '@prisma/client';
 
 export interface TokenPayload {
   sub: string;
-  role: UserRole;
+  role: Role;
 }
 
 export interface Requester extends TokenPayload {}
