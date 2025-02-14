@@ -32,7 +32,6 @@ export abstract class BaseServiceAbstract<T extends BaseEntity>
   }
 
   async remove(id: string) {
-    return false;
-    // return await this.repository.softDelete(id);
+    return !!(await this.repository.delete(id));
   }
 }

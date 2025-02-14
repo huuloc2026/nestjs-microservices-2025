@@ -7,10 +7,14 @@ export interface BaseRepositoryInterface<T> {
 
   findOneByCondition(condition: object): Promise<T | null>;
 
-  // findAll(): Promise<any>;
-  findAll(condition: object, options?: object): Promise<FindAllResponse<T>>;
+  findAll(
+    condition?: Record<string, any>,
+    options?: object,
+  ): Promise<FindAllResponse<T>>;
 
   update(id: string, dto: Partial<T>): Promise<T>;
+
+  delete(id: string): Promise<T>;
 
   permanentlyDelete(id: string): Promise<boolean>;
 }

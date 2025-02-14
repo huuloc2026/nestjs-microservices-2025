@@ -12,10 +12,15 @@ import { OrderItemModule } from './modules/order-item/order-item.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './shared/components/prisma/prisma.module';
 import { PrismaService } from './shared/components/prisma/prisma.service';
+import { CommonModule } from './modules/common/common.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.register({
+      global: true,
+    }),
     UserModule,
     PaymentModule,
     ProductModule,
@@ -24,6 +29,7 @@ import { PrismaService } from './shared/components/prisma/prisma.service';
     OrderItemModule,
     AuthModule,
     PrismaModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -19,7 +19,7 @@ export abstract class BaseAbstractRepository<T>
   }
 
   async findAll(
-    condition: object = {},
+    condition: Record<string, any>,
     options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<T>> {
     const { page = 1, limit = 10 } = options || {};
@@ -36,6 +36,9 @@ export abstract class BaseAbstractRepository<T>
     return { data, page, limit, total };
   }
 
+  async delete(id: string): Promise<T> {
+    return await this.getModel().delete({ where: { id } });
+  }
   async findOneByCondition(condition: object): Promise<T | null> {
     return this.getModel().findFirst({ where: condition });
   }

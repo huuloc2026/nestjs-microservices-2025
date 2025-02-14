@@ -8,6 +8,9 @@ export class UserService extends BaseServiceAbstract<User> {
   constructor(private readonly userRepository: UserRepository) {
     super(userRepository);
   }
+  async findbyEmail(email: string) {
+    return await this.userRepository.findOneByCondition({ email });
+  }
 }
 // import {
 //   ConflictException,
