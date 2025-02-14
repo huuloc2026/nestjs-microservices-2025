@@ -1,4 +1,5 @@
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
+import { PagingSchemaDTO } from 'src/shared/data-model';
 import { BaseRepositoryInterface } from 'src/shared/repository/base/base.interface.repository';
 import { FindAllResponse } from 'src/shared/types/common.types';
 
@@ -15,6 +16,24 @@ export abstract class BaseAbstractRepository<T>
 
   async findOneById(id: string): Promise<T | null> {
     return this.getModel().findUnique({ where: { id } });
+  }
+
+  async findAll(
+    condition: object = {},
+    options?: PagingSchemaDTO,
+  ): Promise<FindAllResponse<T>> {
+    const { page = 1, limit = 10 } = options || {};
+
+    const [data, total] = await Promise.all([
+      this.getModel().findMany({
+        where: condition,
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.getModel().count({ where: condition }),
+    ]);
+
+    return { data, page, limit, total };
   }
 
   async findOneByCondition(condition: object): Promise<T | null> {
