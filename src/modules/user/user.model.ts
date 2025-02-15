@@ -1,47 +1,55 @@
-import {
-  IsDate,
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Length,
-  Matches,
-  Min,
-} from 'class-validator';
-import { Expose, Type } from 'class-transformer';
-import { BaseEntity, BaseStatus } from 'src/shared/data-model';
-import { Prisma, Gender, Role } from '@prisma/client';
+import { User as PrismaUser, Gender, Cart, Role, Order } from '@prisma/client';
+import { Expose } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-// ---------------- DTO ----------------
-export class UserSchema extends BaseEntity {
+export class User implements PrismaUser {
+  @Expose()
   @IsString()
-  @Length(3, 25)
+  @IsNotEmpty()
+  id: string;
+
+  @Expose()
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @Expose()
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @Expose()
+  @IsOptional()
+  phone: string;
+
+  @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
+
+  @Expose()
   password: string;
 
-  @IsOptional()
-  @IsString()
-  phone?: string | null;
+  @Expose()
+  salt: string;
 
-  @IsOptional()
-  @IsString()
-  avatar?: string | null;
+  @Expose()
+  role: Role;
 
-  @IsEnum(Role)
+  @Expose()
   @IsOptional()
-  role?: Role = Role.CLIENT;
+  gender: Gender;
 
-  @IsEnum(Gender)
+  @Expose()
   @IsOptional()
-  gender?: Gender = Gender.OTHER;
+  avatar: string;
+
+  @Expose()
+  @IsOptional()
+  orders: Order[];
+
+  @Expose()
+  @IsOptional()
+  cart: Cart;
 }
-export class User extends UserSchema {}

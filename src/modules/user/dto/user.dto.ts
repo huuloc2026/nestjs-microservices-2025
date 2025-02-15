@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { Expose } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { UserSchema } from 'src/modules/user/user.model';
+import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+
 import { Gender } from '@prisma/client';
+import { User } from '@prisma/client';
+import { InforBasic } from 'src/modules/user/utils.type';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -21,19 +23,30 @@ export class CreateUserDto {
   password: string;
 }
 
-// export class UpdateUserDto extends PartialType(CreateUserDto) {
-//   name?: string;
-//   email?: string;
-//   password?: string;
-// }
-
 export class UserRegistrationDTO extends CreateUserDto {}
-export class UserLoginDTO {}
 export class UserCondDTO {}
-export class UserUpdateDTO extends PartialType(UserSchema) {
+export class UserLoginDTO {
+  @IsEmail()
+  @IsNotEmpty()
+  @Expose()
+  email: string;
+
+  @MinLength(6)
+  @Expose()
+  @IsNotEmpty()
+  password: string;
+}
+
+export class UserUpdateDTO implements InforBasic {
+  @Expose()
+  @IsOptional()
   phone?: string | null;
 
+  @Expose()
+  @IsOptional()
   avatar?: string | null;
 
+  @Expose()
+  @IsOptional()
   gender?: Gender;
 }

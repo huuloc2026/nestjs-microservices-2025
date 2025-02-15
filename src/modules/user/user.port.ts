@@ -1,12 +1,12 @@
 import { Requester, TokenPayload } from 'src/shared/interface/interface';
 
-import { User } from './user.model';
 import {
   UserCondDTO,
   UserLoginDTO,
   UserRegistrationDTO,
   UserUpdateDTO,
 } from 'src/modules/user/dto/user.dto';
+import { User } from '@prisma/client';
 
 export interface IUserService {
   register(dto: UserRegistrationDTO): Promise<string>;

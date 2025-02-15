@@ -8,32 +8,57 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UserService } from 'src/modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+
 import { Requester, TokenPayload } from 'src/shared/interface/interface';
+import {
+  UserLoginDTO,
+  UserRegistrationDTO,
+  UserUpdateDTO,
+} from 'src/modules/user/dto/user.dto';
+import { AuthAbstractService } from 'src/modules/auth/interface/auth.port';
+import { User } from '@prisma/client';
 @Injectable()
-export class AuthService {
+export class AuthService extends AuthAbstractService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
-  async register(createAuthDto: CreateAuthDto) {
+  ) {
+    super();
+  }
+  async register(createAuthDto: UserRegistrationDTO) {
     const existingUser = await this.userService.findbyEmail(
       createAuthDto.email,
     );
-    console.log(existingUser);
     if (existingUser) {
       throw new ForbiddenException('Email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(createAuthDto.password, 10);
-    return await this.userService.create({
+    const salt = bcrypt.genSaltSync(8);
+
+    const hashedPassword = await bcrypt.hash(
+      `${createAuthDto.password}.${salt}`,
+      10,
+    );
+    const user = await this.userService.create({
       ...createAuthDto,
       password: hashedPassword,
+      salt,
     });
+
+    return user;
   }
 
-  async login(dto: CreateAuthDto) {
+  async login(dto: UserLoginDTO) {
     const user = await this.userService.findbyEmail(dto.email);
-    if (!user || !(await bcrypt.compare(dto.password, user.password))) {
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    // 2. Check password
+    const isMatch = await bcrypt.compare(
+      `${dto.password}.${user.salt}`,
+      user.password,
+    );
+    if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -44,21 +69,27 @@ export class AuthService {
     });
   }
 
-  async generateToken(payload: Requester) {}
-
-  findAll() {
-    return `This action returns all auth`;
+  async update(
+    requester: Requester,
+    userId: string,
+    dto: UserUpdateDTO,
+  ): Promise<void> {
+    if (requester.sub !== userId) {
+      throw new ForbiddenException('Unauthorized update attempt');
+    }
+    await this.userService.update(userId, dto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async profile(userId: string): Promise<Omit<User, 'password' | 'salt'>> {
+    const user = await this.userService.findOne(userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    const { password, salt, ...safeUser } = user;
+    return safeUser;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async generateToken(payload: Requester) {
+    return payload;
   }
 }

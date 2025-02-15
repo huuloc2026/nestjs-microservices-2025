@@ -20,7 +20,8 @@ model User {
   password  String
   phone     String?
   role      Role     @default(CLIENT)
-  gender    Gender  @default(OTHER)
+  gender    Gender?  @default(OTHER)
+  salt      String  @default("000000")
   avatar    String?
   orders    Order[]
   createdAt DateTime @default(now())
