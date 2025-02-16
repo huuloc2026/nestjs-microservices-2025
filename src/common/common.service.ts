@@ -2,9 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { omit, pick } from 'lodash';
 import { TokenPayload } from 'src/shared/interface/interface';
-
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class CommonService {
+  constructor(private configService: ConfigService) {}
+  async generateSecretKey(type: 'AT' | 'RT', salt: string) {
+    const AT_SECRET = `${this.configService.get<string>('AT_SECRET')}${salt}`;
+    const RT_SECRET = `${this.configService.get<string>('RT_SECRET')}${salt}`;
+    const Secret = type == 'AT' ? AT_SECRET : RT_SECRET;
+    console.log(Secret);
+    return Secret;
+  }
+  async generateSalt() {
+    return await bcrypt.genSalt(10);
+  }
   generateOTP(): number {
     // Declare a digits variable
     // which stores all digits
@@ -16,7 +28,6 @@ export class CommonService {
     }
     return Number(OTP);
   }
-
   /**
    *
    * @param user @type User
@@ -33,7 +44,6 @@ export class CommonService {
   getEssentialUserData(user: User) {
     return pick(user, ['id', 'email', 'role']);
   }
-
   /**
    *
    * @param user @type User

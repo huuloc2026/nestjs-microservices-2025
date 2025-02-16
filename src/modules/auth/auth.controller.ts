@@ -22,6 +22,10 @@ export class AuthController {
   register(@Body() newUser: CreateAuthDto) {
     return this.authService.register(newUser);
   }
+  @Post('checkjwt')
+  checkjwt(@Body() UserExist: any) {
+    return this.authService.checkjwt(UserExist);
+  }
 
   @Post('login')
   login(@Body() UserExist: UserLoginDTO) {

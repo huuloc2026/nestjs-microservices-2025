@@ -39,7 +39,7 @@ export class AuthService extends AuthAbstractService {
       throw new ForbiddenException('Email already exists');
     }
 
-    const salt = bcrypt.genSaltSync(8);
+    const salt = await this.commonService.generateSalt();
     const newOTP = this.commonService.generateOTP();
 
     const hashedPassword = await bcrypt.hash(`${data.password}.${salt}`, 10);
@@ -73,6 +73,7 @@ export class AuthService extends AuthAbstractService {
       this.commonService.getPayloadFromUser(user);
 
     const { accessToken, refreshToken } = await this.generateToken(userPayload);
+    const checkToken = await this.TokenService.CheckManyTokenStored(user.id);
     // stored token
     await this.TokenService.storeToken(user.id, accessToken, refreshToken);
     return { accessToken, refreshToken };
@@ -109,8 +110,12 @@ export class AuthService extends AuthAbstractService {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const safeUsernhe = this.commonService.getUserOmitPassword(user);
-    return safeUsernhe;
+    const safeUser = this.commonService.getUserOmitPassword(user);
+    return safeUser;
+  }
+
+  async checkjwt(UserExist) {
+    return 'checkjwt';
   }
 
   generateAccessToken(payload: TokenPayload) {

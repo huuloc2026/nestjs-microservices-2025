@@ -37,6 +37,7 @@ model TokenUser {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken String
   refreshToken String
+  status    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
