@@ -1,9 +1,9 @@
 import { FindAllResponse } from 'src/shared/types/common.types';
 import { BaseServiceInterface } from './base.interface.service';
-import { BaseRepositoryInterface } from 'src/shared/repository/base/base.interface.repository';
-import { BaseEntity } from 'src/shared/data-model';
+import { BaseRepositoryInterface } from 'src/shared/repository/base.interface.repository';
+import { BaseEntity, PagingSchemaDTO } from 'src/shared/data-model';
 
-export abstract class BaseServiceAbstract<T extends BaseEntity>
+export abstract class BaseServiceAbstract<T>
   implements BaseServiceInterface<T>
 {
   constructor(private readonly repository: BaseRepositoryInterface<T>) {}
@@ -14,7 +14,7 @@ export abstract class BaseServiceAbstract<T extends BaseEntity>
 
   async findAll(
     filter?: object,
-    options?: object,
+    options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<T>> {
     return await this.repository.findAll(filter, options);
   }

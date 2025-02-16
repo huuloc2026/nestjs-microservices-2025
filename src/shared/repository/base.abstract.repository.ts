@@ -1,6 +1,6 @@
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { PagingSchemaDTO } from 'src/shared/data-model';
-import { BaseRepositoryInterface } from 'src/shared/repository/base/base.interface.repository';
+import { BaseRepositoryInterface } from 'src/shared/repository/base.interface.repository';
 import { FindAllResponse } from 'src/shared/types/common.types';
 
 export abstract class BaseAbstractRepository<T>
@@ -36,7 +36,7 @@ export abstract class BaseAbstractRepository<T>
     return { data, page, limit, total };
   }
 
-  async delete(id: string): Promise<T> {
+  async delete(id: string): Promise<boolean> {
     return await this.getModel().delete({ where: { id } });
   }
   async findOneByCondition(condition: object): Promise<T | null> {
@@ -49,9 +49,7 @@ export abstract class BaseAbstractRepository<T>
       data: dto,
     });
   }
-
-  async permanentlyDelete(id: string): Promise<boolean> {
+  async permanentlyDelete(id: string): Promise<void> {
     await this.getModel().delete({ where: { id } });
-    return true;
   }
 }

@@ -1,3 +1,4 @@
+import { PagingSchemaDTO } from 'src/shared/data-model';
 import { FindAllResponse } from 'src/shared/types/common.types';
 
 export interface BaseRepositoryInterface<T> {
@@ -9,12 +10,12 @@ export interface BaseRepositoryInterface<T> {
 
   findAll(
     condition?: Record<string, any>,
-    options?: object,
+    options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<T>>;
 
   update(id: string, dto: Partial<T>): Promise<T>;
 
-  delete(id: string): Promise<T>;
+  delete(id: string): Promise<boolean>;
 
-  permanentlyDelete(id: string): Promise<boolean>;
+  permanentlyDelete(id: string): Promise<void>;
 }
