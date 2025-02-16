@@ -21,6 +21,7 @@ async function main() {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       salt: salt,
+      verifyCode: '1111',
       password: hashSync(`password123.${salt}`, 10),
       role: faker.helpers.arrayElement(['ADMIN', 'CLIENT', 'SELLER']),
     })),

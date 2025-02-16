@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { UserLoginDTO } from 'src/modules/user/dto/user.dto';
+import { UserLoginDTO, UserVerifyDTO } from 'src/modules/user/dto/user.dto';
 import { forgotpasswordDTO } from 'src/modules/auth/dto/changepasswordDTO';
 
 @Controller('auth')
@@ -43,13 +43,13 @@ export class AuthController {
   }
 
   @Post('forgotpassword')
-  forgotpassword(@Body() UserExist: forgotpasswordDTO) {
-    return this.authService.forgotpassword(UserExist);
+  forgotpassword(@Body() data: forgotpasswordDTO) {
+    return this.authService.forgotpassword(data);
   }
 
   @Post('verify')
-  verify(@Body() UserExist: any) {
-    return this.authService.verifyAccount(UserExist);
+  verify(@Body() data: UserVerifyDTO) {
+    return this.authService.verifyAccount(data.email, data.verifyCode);
   }
 
   @Post('me')

@@ -9,4 +9,11 @@ export class ChangePasswordDTO {
   confirmPassword: string;
 }
 
-export class forgotpasswordDTO {}
+export class forgotpasswordDTO {
+  @Expose()
+  email: string;
+  @Expose()
+  newPassword: string;
+  @Expose()
+  confirmPassword: string;
+}

@@ -23,7 +23,7 @@ export abstract class BaseServiceAbstract<T>
     return await this.repository.findOneById(id);
   }
 
-  async findOneByCondition(filter: Partial<T>) {
+  async findOneByCondition(filter: any) {
     return await this.repository.findOneByCondition(filter);
   }
 

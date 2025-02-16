@@ -24,6 +24,7 @@ model User {
   salt      String  @default("000000")
   verifyCode String?
   avatar    String?
+  isActive  Boolean  @default(false)
   orders    Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

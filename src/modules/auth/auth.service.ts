@@ -20,7 +20,10 @@ import { AuthAbstractService } from 'src/modules/auth/interface/auth.port';
 import { User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { CommonService } from 'src/common/common.service';
-import { ChangePasswordDTO } from 'src/modules/auth/dto/changepasswordDTO';
+import {
+  ChangePasswordDTO,
+  forgotpasswordDTO,
+} from 'src/modules/auth/dto/changepasswordDTO';
 import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
 @Injectable()
 export class AuthService extends AuthAbstractService {
@@ -190,6 +193,22 @@ export class AuthService extends AuthAbstractService {
     };
   }
   async UploadAvatar() {}
-  async verifyAccount(email: string) {}
-  async forgotpassword(email: any) {}
+  async verifyAccount(email: string, code: string) {
+    const user = await this.userService.findbyEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    if (user.isActive || user.verifyCode === null) {
+      throw new UnauthorizedException('Account already verified');
+    }
+    if (code !== user.verifyCode) {
+      throw new UnauthorizedException('Invalid code');
+    }
+    await this.userService.update(user.id, { isActive: true });
+    return {
+      message: 'Successfully verify account',
+    };
+  }
+  async forgotpassword(data: forgotpasswordDTO) {}
 }

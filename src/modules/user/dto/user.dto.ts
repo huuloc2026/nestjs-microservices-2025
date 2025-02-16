@@ -37,6 +37,16 @@ export class UserLoginDTO {
   password: string;
 }
 
+export class UserVerifyDTO {
+  @IsEmail()
+  @IsNotEmpty()
+  @Expose()
+  email: string;
+  @Expose()
+  @IsNotEmpty()
+  verifyCode: string;
+}
+
 export class UserUpdateDTO implements InforBasic {
   @Expose()
   @IsOptional()

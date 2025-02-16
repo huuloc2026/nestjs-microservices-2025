@@ -38,6 +38,9 @@ export class User implements PrismaUser {
   salt: string;
 
   @Expose()
+  isActive: boolean;
+
+  @Expose()
   role: Role;
 
   @Expose()
