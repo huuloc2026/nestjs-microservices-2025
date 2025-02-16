@@ -16,7 +16,6 @@ export interface IAuthService {
     dto: UserUpdateDTO,
   ): Promise<void>;
   delete(requester: Requester, userId: string): Promise<void>;
-  // introspect token rpc
   introspectToken(token: string): Promise<TokenPayload>;
 }
 export class AuthAbstractService implements IAuthService {

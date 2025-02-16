@@ -19,7 +19,7 @@ export abstract class BaseServiceAbstract<T extends BaseEntity>
     return await this.repository.findAll(filter, options);
   }
 
-  async findOne(id: string) {
+  async findOnebyId(id: string) {
     return await this.repository.findOneById(id);
   }
 

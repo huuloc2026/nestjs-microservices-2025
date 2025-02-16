@@ -12,8 +12,8 @@ import { OrderItemModule } from './modules/order-item/order-item.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './shared/components/prisma/prisma.module';
 import { PrismaService } from './shared/components/prisma/prisma.service';
-import { CommonModule } from './modules/common/common.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [

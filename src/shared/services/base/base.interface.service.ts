@@ -11,7 +11,7 @@ export interface Read<T> {
     filter?: Record<string, any>,
     options?: { page?: number; limit?: number },
   ): Promise<FindAllResponse<T>>;
-  findOne(id: string): Promise<T | null>;
+  findOnebyId(id: string): Promise<T | null>;
   findOneByCondition(filter: Partial<T>): Promise<T | null>;
 }
 

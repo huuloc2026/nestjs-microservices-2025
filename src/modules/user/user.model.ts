@@ -19,6 +19,9 @@ export class User implements PrismaUser {
   email: string;
 
   @Expose()
+  verifyCode: string;
+
+  @Expose()
   @IsOptional()
   phone: string;
 
