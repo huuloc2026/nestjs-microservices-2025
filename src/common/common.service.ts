@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { omit, pick } from 'lodash';
+import { TokenPayload } from 'src/shared/interface/interface';
 
 @Injectable()
 export class CommonService {
@@ -16,12 +17,43 @@ export class CommonService {
     return Number(OTP);
   }
 
+  /**
+   *
+   * @param user @type User
+   * @returns User without password
+   */
   getUserOmitPassword(user: User) {
     return omit(user, ['password']);
   }
+  /**
+   *
+   * @param user @type User
+   * @returns User with essential data
+   */
   getEssentialUserData(user: User) {
     return pick(user, ['id', 'email', 'role']);
   }
+
+  /**
+   *
+   * @param user @type User
+   * @returns User with essential data
+   */
+  getPayloadFromUser(user: User): TokenPayload {
+    const userPicked = pick(user, ['id', 'email', 'role']);
+    const result: TokenPayload = {
+      sub: userPicked.id,
+      email: userPicked.email,
+      role: userPicked.role,
+    };
+    return result;
+  }
+
+  /**
+   *
+   * @param user @type User
+   * @returns User with pick optional
+   */
   getEssentialByCondition(user: User, condition: string[]) {
     return pick(user, condition);
   }

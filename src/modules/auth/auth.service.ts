@@ -20,6 +20,8 @@ import { AuthAbstractService } from 'src/modules/auth/interface/auth.port';
 import { User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { CommonService } from 'src/common/common.service';
+import { ChangePasswordDTO } from 'src/modules/auth/dto/changepasswordDTO';
+import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
 @Injectable()
 export class AuthService extends AuthAbstractService {
   constructor(
@@ -27,6 +29,7 @@ export class AuthService extends AuthAbstractService {
     private jwtService: JwtService,
     private readonly configService: ConfigService,
     private commonService: CommonService,
+    private TokenService: TokenRepoService,
   ) {
     super();
   }
@@ -55,22 +58,24 @@ export class AuthService extends AuthAbstractService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    // 2. Check password
     const isMatch = await this.verifyPlainContentWithHashedContent(
       dto.password,
       user.password,
       user.salt,
     );
-    // 2. Check password
 
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.generateToken({
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    });
+    const userPayload: TokenPayload =
+      this.commonService.getPayloadFromUser(user);
+
+    const { accessToken, refreshToken } = await this.generateToken(userPayload);
+    // stored token
+    await this.TokenService.storeToken(user.id, accessToken, refreshToken);
+    return { accessToken, refreshToken };
   }
 
   private async verifyPlainContentWithHashedContent(
@@ -99,13 +104,13 @@ export class AuthService extends AuthAbstractService {
     await this.userService.update(userId, dto);
   }
 
-  async profile(userId: string): Promise<Omit<User, 'password' | 'salt'>> {
-    const user = await this.userService.findOnebyId(userId);
+  async profile(email: string): Promise<Omit<User, 'password' | 'salt'>> {
+    const user = await this.userService.findbyEmail(email);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const { password, salt, ...safeUser } = user;
-    return safeUser;
+    const safeUsernhe = this.commonService.getUserOmitPassword(user);
+    return safeUsernhe;
   }
 
   generateAccessToken(payload: TokenPayload) {
@@ -122,9 +127,64 @@ export class AuthService extends AuthAbstractService {
     });
   }
 
-  async generateToken(payload: TokenPayload) {
-    const access_token = await this.generateAccessToken(payload);
-    const refresh_token = await this.generateRefreshToken(payload);
-    return { access_token, refresh_token };
+  async VerifyToken(token: string, type: 'AT' | 'RT') {
+    const decoded =
+      type == 'AT'
+        ? await this.jwtService.verify(token, {
+            secret: this.configService.get<string>('AT_SECRET'),
+          })
+        : await this.jwtService.verify(token, {
+            secret: this.configService.get<string>('RT_SECRET'),
+          });
+    return decoded;
   }
+
+  async validateToken(token: string) {
+    const decoded = await this.jwtService.verify(token, {
+      secret: this.configService.get<string>('AT_SECRET'),
+    });
+    return decoded;
+  }
+
+  async generateToken(payload: TokenPayload) {
+    const accessToken = await this.generateAccessToken(payload);
+    const refreshToken = await this.generateRefreshToken(payload);
+    return { accessToken, refreshToken };
+  }
+
+  async ChangePassword(email: string, passwordBody: ChangePasswordDTO) {
+    const existUser = await this.userService.findbyEmail(email);
+
+    //check password match
+    const checkMatch = await this.verifyPlainContentWithHashedContent(
+      passwordBody.oldPassword,
+      existUser.password,
+      existUser.salt,
+    );
+
+    if (!checkMatch) {
+      throw new BadRequestException('Wrong password');
+    }
+    const newHashedpassword = await bcrypt.hash(
+      `${passwordBody.newPassword}.${existUser.salt}`,
+      10,
+    );
+    // update in db
+    await this.userService.update(existUser.id, {
+      password: newHashedpassword,
+    });
+
+    const Payload = this.commonService.getPayloadFromUser(existUser);
+    //create new key
+    const { accessToken, refreshToken } = await this.generateToken(Payload);
+
+    return {
+      message: "'Successfully changed password'",
+      accessToken,
+      refreshToken,
+    };
+  }
+  async UploadAvatar() {}
+  async verifyAccount(email: string) {}
+  async forgotpassword(email: any) {}
 }

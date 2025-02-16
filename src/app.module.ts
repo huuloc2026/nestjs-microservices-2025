@@ -14,6 +14,7 @@ import { PrismaModule } from './shared/components/prisma/prisma.module';
 import { PrismaService } from './shared/components/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { CommonModule } from './common/common.module';
+import { TokenRepoModule } from './modules/token-repo/token-repo.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CommonModule } from './common/common.module';
     AuthModule,
     PrismaModule,
     CommonModule,
+    TokenRepoModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
