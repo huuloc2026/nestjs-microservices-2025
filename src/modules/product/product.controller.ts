@@ -21,21 +21,6 @@ export class ProductController {
 
   @Get()
   findAll() {
-    return this.productService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOnebyId(id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: any) {
-    return this.productService.update(id, updateProductDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.permanentlyDelete(id);
+    return this.productService.list();
   }
 }

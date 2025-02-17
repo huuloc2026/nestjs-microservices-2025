@@ -5,7 +5,7 @@ import { PrismaModule } from 'src/shared/components/prisma/prisma.module';
 import { UserRepository } from 'src/modules/user/user.repo';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [],
   controllers: [UserController],
   providers: [UserService, UserRepository],
   exports: [UserService, UserRepository],

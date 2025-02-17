@@ -9,7 +9,6 @@ export abstract class BaseAbstractRepository<T>
 {
   constructor(protected readonly prisma: PrismaService) {}
 
-  // Ensure derived classes implement the correct Prisma model
   abstract getModel(): {
     create: (data: any) => Promise<T>;
     findUnique: (args: any) => Promise<T | null>;
