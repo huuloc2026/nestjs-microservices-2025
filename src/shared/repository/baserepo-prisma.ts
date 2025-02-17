@@ -1,3 +1,4 @@
+import { BaseStatus } from '@prisma/client';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { IRepository } from 'src/shared/interface/interface';
 import { FindAllResponse } from 'src/shared/types/common.types';
@@ -28,6 +29,13 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
   }
 
   // Delete an entity by ID
+  async softdelete(id: string): Promise<Entity> {
+    return this.getModel().update({
+      where: { id },
+      data: { status: BaseStatus.INACTIVE },
+    });
+  }
+
   async delete(id: string): Promise<Entity> {
     return this.getModel().delete({
       where: { id },

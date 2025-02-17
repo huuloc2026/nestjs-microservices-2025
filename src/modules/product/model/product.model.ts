@@ -10,7 +10,8 @@ import {
   IsUrl,
   MaxLength,
 } from 'class-validator';
-export const ModelName = 'product';
+import { ModelName } from 'src/shared/modelName';
+
 export class ProductSchema {
   @IsNotEmpty({ message: 'Name is required' })
   @IsString({ message: 'Name must be a string' })

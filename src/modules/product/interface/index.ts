@@ -9,6 +9,7 @@ import { FindAllResponse } from 'src/shared/types/common.types';
 export interface IProductUseCase {
   create(product: CreateProductDto): Promise<Product>;
   update(id: string, product: UpdateProductDto): Promise<Product>;
+  softdelete(id: string): Promise<Product>;
   delete(id: string): Promise<Product>;
   getDetail(id: string): Promise<Product>;
   list(

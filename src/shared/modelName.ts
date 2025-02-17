@@ -1,0 +1,16 @@
+export enum ModelName {
+  Product = 'product',
+  User = 'user',
+  Category = 'category',
+  Order = 'order',
+  OrderItem = 'orderItem',
+  Role = 'role',
+  Permission = 'permission',
+  Cart = 'cart',
+  CartItem = 'cartItem',
+  ProductCategory = 'productCategory',
+  ProductImage = 'productImage',
+  ProductVariant = 'productVariant',
+  ProductVariantOption = 'productVariantOption',
+  ProductVariantOptionValue = 'productVariantOptionValue',
+}
