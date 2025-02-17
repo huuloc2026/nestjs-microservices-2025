@@ -1,8 +1,15 @@
-import { User as PrismaUser, Gender, Cart, Role, Order } from '@prisma/client';
+import {
+  User as PrismaUser,
+  Gender,
+  Cart,
+  Role,
+  Order,
+  $Enums,
+} from '@prisma/client';
 import { Expose } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class User implements PrismaUser {
+export class UserModel implements PrismaUser {
   @Expose()
   @IsString()
   @IsNotEmpty()
@@ -25,6 +32,8 @@ export class User implements PrismaUser {
   @IsOptional()
   phone: string;
 
+  status: $Enums.BaseStatus;
+
   @Expose()
   createdAt: Date;
 
@@ -38,7 +47,7 @@ export class User implements PrismaUser {
   salt: string;
 
   @Expose()
-  isActive: boolean;
+  isVerify: boolean;
 
   @Expose()
   role: Role;

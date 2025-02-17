@@ -2,7 +2,10 @@
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'MOD', 'SELLER', 'CLIENT');
 
 -- CreateEnum
-CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'Other');
+CREATE TYPE "BaseStatus" AS ENUM ('ACTIVE', 'PENDING', 'INACTIVE', 'BANNED', 'DELETED');
+
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'OTHER');
 
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED');
@@ -16,14 +19,31 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
+    "phone" TEXT,
     "role" "Role" NOT NULL DEFAULT 'CLIENT',
-    "gender" "Gender" NOT NULL DEFAULT 'Other',
-    "avatar" TEXT NOT NULL,
+    "gender" "Gender" DEFAULT 'OTHER',
+    "salt" TEXT NOT NULL DEFAULT '000000',
+    "verifyCode" TEXT,
+    "avatar" TEXT,
+    "isVerify" BOOLEAN NOT NULL DEFAULT false,
+    "status" "BaseStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TokenUser" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "accessToken" TEXT NOT NULL,
+    "refreshToken" TEXT NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "TokenUser_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -35,6 +55,7 @@ CREATE TABLE "Product" (
     "stock" INTEGER NOT NULL,
     "imageUrl" TEXT,
     "categoryId" TEXT,
+    "status" "BaseStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -115,6 +136,9 @@ CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
+
+-- AddForeignKey
+ALTER TABLE "TokenUser" ADD CONSTRAINT "TokenUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;

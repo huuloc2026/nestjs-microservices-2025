@@ -54,10 +54,6 @@ export class AuthService extends AuthAbstractService {
       salt,
     });
 
-    console.log('User Data:', data);
-    console.log('Generated OTP:', newOTP);
-    console.log('Hashed Password:', hashedPassword);
-
     return user;
   }
   //TODO:
@@ -196,17 +192,16 @@ export class AuthService extends AuthAbstractService {
   async UploadAvatar() {}
   async verifyAccount(email: string, code: string) {
     const user = await this.userService.findbyEmail(email);
-
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    if (user.isActive || user.verifyCode === null) {
+    if (user.isVerify || user.verifyCode === null) {
       throw new UnauthorizedException('Account already verified');
     }
     if (code !== user.verifyCode) {
       throw new UnauthorizedException('Invalid code');
     }
-    await this.userService.update(user.id, { isActive: true });
+    await this.userService.update(user.id, { isVerify: true });
     return {
       message: 'Successfully verify account',
     };
