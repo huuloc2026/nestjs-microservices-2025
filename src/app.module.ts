@@ -23,6 +23,7 @@ import { RedisModule } from './shared/components/redis/redis.module';
     JwtModule.register({
       global: true,
     }),
+    PrismaModule,
     UserModule,
     PaymentModule,
     ProductModule,
@@ -30,7 +31,6 @@ import { RedisModule } from './shared/components/redis/redis.module';
     OrderModule,
     OrderItemModule,
     AuthModule,
-    PrismaModule,
     CommonModule,
     TokenRepoModule,
     RedisModule,

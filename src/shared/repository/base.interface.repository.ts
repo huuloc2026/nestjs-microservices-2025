@@ -15,7 +15,7 @@ export interface BaseRepositoryInterface<T> {
 
   update(id: string, dto: Partial<T>): Promise<T>;
 
-  delete(id: string): Promise<boolean>;
+  delete(id: string): Promise<any>;
 
   permanentlyDelete(id: string): Promise<void>;
 }

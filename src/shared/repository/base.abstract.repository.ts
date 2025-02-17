@@ -8,7 +8,16 @@ export abstract class BaseAbstractRepository<T>
 {
   constructor(protected readonly prisma: PrismaService) {}
 
-  abstract getModel(): any;
+  // Ensure derived classes implement the correct Prisma model
+  abstract getModel(): {
+    create: (data: any) => Promise<T>;
+    findUnique: (args: any) => Promise<T | null>;
+    findMany: (args: any) => Promise<T[]>;
+    findFirst: (args: any) => Promise<T | null>;
+    update: (args: any) => Promise<T>;
+    delete: (args: any) => Promise<T>;
+    count: (args: any) => Promise<number>;
+  };
 
   async create(dto: Partial<T>): Promise<T> {
     return this.getModel().create({ data: dto });
@@ -36,9 +45,10 @@ export abstract class BaseAbstractRepository<T>
     return { data, page, limit, total };
   }
 
-  async delete(id: string): Promise<boolean> {
-    return await this.getModel().delete({ where: { id } });
+  async delete(id: string): Promise<void> {
+    await this.getModel().delete({ where: { id } });
   }
+
   async findOneByCondition(condition: object): Promise<T | null> {
     return this.getModel().findFirst({ where: condition });
   }
@@ -49,6 +59,7 @@ export abstract class BaseAbstractRepository<T>
       data: dto,
     });
   }
+
   async permanentlyDelete(id: string): Promise<void> {
     await this.getModel().delete({ where: { id } });
   }

@@ -5,7 +5,6 @@ import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
 import { Gender } from '@prisma/client';
 import { User } from '@prisma/client';
-import { InforBasic } from 'src/modules/user/utils.type';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -47,7 +46,7 @@ export class UserVerifyDTO {
   verifyCode: string;
 }
 
-export class UserUpdateDTO implements InforBasic {
+export class UserUpdateDTO {
   @Expose()
   @IsOptional()
   phone?: string | null;

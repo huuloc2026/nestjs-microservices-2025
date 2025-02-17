@@ -52,6 +52,7 @@ model Product {
   imageUrl    String?
   categoryId  String?
   category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  status    baseStatus  @default(ACTIVE)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   OrderItem   OrderItem[]
@@ -108,6 +109,8 @@ model CartItem {
   createdAt DateTime @default(now())
 }
 
+
+
 model Payment {
   id        String        @id @default(uuid())
   orderId   String
@@ -123,7 +126,10 @@ enum Role {
   SELLER
   CLIENT
 }
-
+enum baseStatus {
+  ACTIVE
+  INACTIVE
+}
 enum Gender {
   MALE
   FEMALE
