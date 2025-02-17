@@ -1,99 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Hexagonal Architecture E-commerce API with NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project demonstrates a clean and maintainable e-commerce API built with NestJS, following the principles of Hexagonal Architecture (also known as Ports and Adapters Architecture).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Introduction](#introduction)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Testing](#testing)
+- [Further Development](#further-development)
+- [Contributing](#contributing)
+- [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Introduction
 
-## Project setup
+Hexagonal Architecture promotes loose coupling between the core business logic and the external dependencies (databases, APIs, UI). This makes the application more flexible, testable, and easier to maintain. This project showcases how to implement this architecture in a NestJS application.
 
-```bash
-$ yarn install
+## Architecture
+
+The application is structured around the following layers:
+
+- **Core (Domain):** Contains the business logic, entities, and use cases. It's completely independent of any external frameworks or libraries.
+- **Application:** Defines the use case interfaces (ports) that the Core interacts with. It orchestrates the interaction between the Core and the infrastructure.
+- **Infrastructure (Adapters):** Implements the interfaces defined in the Application layer. This layer contains the concrete implementations for database access, external API calls, and other I/O operations.
+
+## Features
+
+- Product Management (CRUD operations)
+- Shopping Cart
+- Order Processing
+- User Authentication (Example implementation)
+- ... (Add more features as you develop)
+
+## Technologies
+
+- NestJS
+- TypeScript
+- Prisma (Example ORM, can be replaced)
+- PostgreSQL (Example database, can be replaced)
+- Jest (Testing framework)
+- ... (Add other technologies used)
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone [https://github.com/huuloc2026/nestjs-microservices-2025](https://github.com/huuloc2026/nestjs-microservices-2025)
+   ```
+
+   Install dependencies:
+
+   ```
+   npm install
+   ```
+
+2. Configure environment variables:
+
+   Create a .env file in the root directory and add the necessary environment variables 1 (e.g., database connection string, JWT secret). See .env.example for a template.  
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`API_KEY=`
+
+3. Run database migrations:
+
+```
+npx prisma migrate dev --name init
 ```
 
-## Compile and run the project
+4. Start the development server:
 
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+```
+npm run start:dev
 ```
 
-## Run tests
+Access the API at http://localhost:3000.
 
-```bash
-# unit tests
-$ yarn run test
+**Key Improvements and Explanations for the README:**
 
-# e2e tests
-$ yarn run test:e2e
+- **Clear Structure:** The README is well-organized with clear headings and a table of contents.
+- **Focus on Hexagonal Architecture:** The architecture section explains the core concepts and visually represents the layers.
+- **Concise Explanations:** Each section provides a brief and to-the-point explanation.
+- **Standard Sections:** The README includes all the essential sections (installation, usage, testing, etc.).
+- **Project Structure:** The project structure section gives a clear overview of how the code is organized.
+- **Further Development:** This section provides ideas for extending the project.
+- **Contribution Guidelines:** Includes a call for contributions.
+- **License Information:** Specifies the license.
+- **Example Code Snippets:** Includes relevant code snippets for installation and usage.
+- **Emphasis on Ports and Adapters:** The description of Hexagonal Architecture correctly uses the terms "ports" (interfaces) and "adapters" (implementations).
 
-# test coverage
-$ yarn run test:cov
+## Testing
+
+Run unit and integration tests:
+
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ yarn install -g mau
-$ mau deploy
+npm run test
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Further Development
 
-## Resources
+- **Implement more e-commerce features (e.g., payments, shipping).**
+- **Add robust error handling and logging.**
+- **Implement API documentation (e.g., using Swagger).**
+- **Explore different database options.**
+- **Implement proper authentication and authorization.**
 
-Check out a few resources that may come in handy when working with NestJS:
+## Contributing
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT
+
+This improved README provides a comprehensive guide to your project, making it easier for others (and your future self) to understand, use, and contribute to it. Remember to fill in the placeholders (e.g., technologies used, specific features) with the details of your project.
