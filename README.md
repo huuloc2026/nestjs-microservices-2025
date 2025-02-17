@@ -1,3 +1,7 @@
+## Screenshots
+
+![App Screenshot](https://miro.medium.com/v2/resize:fit:1170/1*aD3zDFzcF5Y2_27dvU213Q.png)
+
 # Hexagonal Architecture E-commerce API with NestJS
 
 This project demonstrates a clean and maintainable e-commerce API built with NestJS, following the principles of Hexagonal Architecture (also known as Ports and Adapters Architecture).
@@ -120,3 +124,15 @@ Contributions are welcome! Please open an issue or submit a pull request.
 MIT
 
 This improved README provides a comprehensive guide to your project, making it easier for others (and your future self) to understand, use, and contribute to it. Remember to fill in the placeholders (e.g., technologies used, specific features) with the details of your project.
+
+## Authors
+
+- [@huuloc2026](https://www.github.com/huuloc2026)
+
+## Deployment
+
+To deploy this project run
+
+```bash
+  yarn run dev
+```
