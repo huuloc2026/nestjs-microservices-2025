@@ -52,7 +52,7 @@ model Product {
   imageUrl    String?
   categoryId  String?
   category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  status    baseStatus  @default(ACTIVE)
+  status    BaseStatus  @default(ACTIVE)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   OrderItem   OrderItem[]
@@ -74,6 +74,7 @@ model Order {
   totalPrice Float
   status     OrderStatus @default(PENDING)
   items      OrderItem[]
+  
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   Payment    Payment[]
@@ -126,9 +127,12 @@ enum Role {
   SELLER
   CLIENT
 }
-enum baseStatus {
-  ACTIVE
-  INACTIVE
+enum BaseStatus {
+  ACTIVE 
+  PENDING 
+  INACTIVE 
+  BANNED 
+  DELETED 
 }
 enum Gender {
   MALE
@@ -137,6 +141,7 @@ enum Gender {
 }
 
 enum OrderStatus {
+  
   PENDING
   SHIPPED
   DELIVERED

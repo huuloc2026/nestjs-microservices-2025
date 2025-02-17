@@ -2,6 +2,8 @@ import { FindAllResponse } from 'src/shared/types/common.types';
 import { BaseServiceInterface } from './base.interface.service';
 import { BaseRepositoryInterface } from 'src/shared/repository/base.interface.repository';
 import { PagingSchemaDTO } from 'src/shared/data-model';
+import { NotFoundError } from 'rxjs';
+import { NotFoundException } from '@nestjs/common';
 
 export abstract class BaseServiceAbstract<T>
   implements BaseServiceInterface<T>
@@ -32,6 +34,14 @@ export abstract class BaseServiceAbstract<T>
   }
 
   async remove(id: string): Promise<any> {
+    const data = await this.findOnebyId(id);
+    if (!data) {
+      throw new NotFoundException('Data not found');
+    }
     await this.repository.delete(id);
+  }
+
+  async permanentlyDelete(id: string): Promise<void> {
+    await this.repository.permanentlyDelete(id);
   }
 }

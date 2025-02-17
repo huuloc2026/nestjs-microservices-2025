@@ -16,11 +16,11 @@ import {
 import { Transform as ClassTransformerTransform } from 'class-transformer';
 
 export enum BaseStatus {
-  ACTIVE = 'active',
-  PENDING = 'pending',
-  INACTIVE = 'inactive',
-  BANNED = 'banned',
-  DELETED = 'deleted',
+  ACTIVE = 'ACTIVE',
+  PENDING = 'PENDING',
+  INACTIVE = 'INACTIVE',
+  BANNED = 'BANNED',
+  DELETED = 'DELETED',
 }
 
 export class PagingSchemaDTO {

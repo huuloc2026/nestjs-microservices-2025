@@ -1,8 +1,9 @@
+import { $Enums, BaseStatus } from '@prisma/client';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { PagingSchemaDTO } from 'src/shared/data-model';
 import { BaseRepositoryInterface } from 'src/shared/repository/base.interface.repository';
 import { FindAllResponse } from 'src/shared/types/common.types';
-
+const { INACTIVE } = BaseStatus;
 export abstract class BaseAbstractRepository<T>
   implements BaseRepositoryInterface<T>
 {
@@ -41,12 +42,7 @@ export abstract class BaseAbstractRepository<T>
       }),
       this.getModel().count({ where: condition }),
     ]);
-
     return { data, page, limit, total };
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.getModel().delete({ where: { id } });
   }
 
   async findOneByCondition(condition: object): Promise<T | null> {
@@ -60,7 +56,14 @@ export abstract class BaseAbstractRepository<T>
     });
   }
 
-  async permanentlyDelete(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.getModel().delete({ where: { id } });
+  }
+
+  async permanentlyDelete(id: string): Promise<void> {
+    await this.getModel().update({
+      where: { id },
+      data: { status: INACTIVE },
+    });
   }
 }
