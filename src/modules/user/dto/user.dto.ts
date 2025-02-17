@@ -22,6 +22,20 @@ export class CreateUserDto {
   password: string;
 }
 
+export class UpdateUserDto {
+  @IsOptional()
+  @Expose()
+  name?: string;
+
+  @IsOptional()
+  @Expose()
+  email?: string;
+
+  @IsOptional()
+  @Expose()
+  password?: string;
+}
+
 export class UserRegistrationDTO extends CreateUserDto {}
 export class UserCondDTO {}
 export class UserLoginDTO {

@@ -3,14 +3,21 @@ import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 
 import { User } from '@prisma/client';
 import { BaseAbstractRepository } from 'src/shared/repository/base.abstract.repository';
+import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
+import { CreateUserDto, UpdateUserDto } from 'src/modules/user/dto/user.dto';
+import { ModelName } from 'src/shared/modelName';
 
 @Injectable()
-export class UserRepository extends BaseAbstractRepository<User> {
+export class UserRepository extends BaseRepositoryPrisma<
+  User,
+  CreateUserDto,
+  UpdateUserDto
+> {
   constructor(protected readonly prisma: PrismaService) {
-    super(prisma);
+    super(prisma, ModelName.User);
   }
 
-  getModel() {
-    return this.prisma.user;
+  findbyEmail(email: string) {
+    return this.prisma.user.findFirst({ where: { email } });
   }
 }

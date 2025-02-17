@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProductUseCase } from 'src/modules/product/usecase';
-import { ProductRepository } from 'src/modules/product/infras/repo/product.prisma';
+import { ProductRepository } from 'src/modules/product/infras/product.prisma';
 @Injectable()
 export class ProductService extends ProductUseCase {
   constructor(private readonly productRepositoy: ProductRepository) {

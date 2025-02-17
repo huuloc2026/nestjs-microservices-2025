@@ -23,18 +23,6 @@ export interface IAuthService {
   introspectToken(token: string): Promise<TokenPayload>;
 }
 
-export interface IUserService<T> {
-  create(dto: Partial<T>): Promise<T>;
-  findAll(
-    filter?: object,
-    options?: PagingSchemaDTO,
-  ): Promise<FindAllResponse<T>>;
-  findOneById(id: string): Promise<T | null>;
-  findOneByCondition(filter: Partial<T>): Promise<T | null>;
-  update(id: string, dto: Partial<T>): Promise<T>;
-  remove(id: string): Promise<boolean>;
-}
-
 export interface IUserRepository {
   // 🔹 Query Methods
   get(id: string): Promise<User | null>;

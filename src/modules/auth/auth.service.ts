@@ -36,7 +36,8 @@ export class AuthService extends AuthAbstractService {
   ) {
     super();
   }
-  async register(data: UserRegistrationDTO) {
+  //TODO:
+  async register(data: any) {
     const existingUser = await this.userService.findbyEmail(data.email);
     if (existingUser) {
       throw new ForbiddenException('Email already exists');
@@ -53,9 +54,13 @@ export class AuthService extends AuthAbstractService {
       salt,
     });
 
+    console.log('User Data:', data);
+    console.log('Generated OTP:', newOTP);
+    console.log('Hashed Password:', hashedPassword);
+
     return user;
   }
-
+  //TODO:
   async login(dto: UserLoginDTO) {
     const user = await this.userService.findbyEmail(dto.email);
     if (!user) {
@@ -96,12 +101,8 @@ export class AuthService extends AuthAbstractService {
     }
     return is_matching;
   }
-
-  async update(
-    requester: Requester,
-    userId: string,
-    dto: UserUpdateDTO,
-  ): Promise<void> {
+  //TODO:
+  async update(requester: Requester, userId: string, dto: any): Promise<void> {
     if (requester.sub !== userId) {
       throw new ForbiddenException('Unauthorized update attempt');
     }
