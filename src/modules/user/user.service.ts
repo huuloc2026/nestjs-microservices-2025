@@ -1,11 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { UserRepository } from 'src/modules/user/user.repo';
 import { $Enums, User } from '@prisma/client';
-import { BaseServiceAbstract } from 'src/shared/services/base.abstract.service';
 import { IUserUseCase } from 'src/modules/user/interface';
 import { PagingSchemaDTO } from 'src/shared/data-model';
-import { FindAllResponse } from 'src/shared/types/common.types';
 
 @Injectable()
 export class UserService implements IUserUseCase<User> {

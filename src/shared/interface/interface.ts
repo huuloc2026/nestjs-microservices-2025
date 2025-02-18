@@ -10,17 +10,6 @@ export interface TokenPayload {
 
 export interface Requester extends TokenPayload {}
 
-// export interface IProductUseCase {
-//   create(product: CreateProductDto): Promise<Product>;
-//   update(id: string, product: UpdateProductDto): Promise<Product>;
-//   delete(id: string): Promise<Product>;
-//   getDetail(id: string): Promise<Product>;
-//   list(
-//     filter?: object,
-//     options?: PagingSchemaDTO,
-//   ): Promise<FindAllResponse<Product>>;
-// }
-
 export const filterCond = {
   status: BaseStatus.ACTIVE,
 };

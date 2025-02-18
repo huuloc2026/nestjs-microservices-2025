@@ -14,7 +14,7 @@ export class TokenRepoService
 {
   constructor(
     private readonly repository: TokenRepository,
-    prisma: PrismaService,
+    protected prisma: PrismaService,
   ) {
     super(prisma, ModelName.TokenUser);
   }

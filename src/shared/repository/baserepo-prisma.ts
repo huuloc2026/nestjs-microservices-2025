@@ -49,21 +49,19 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
     });
   }
 
-  // async getDetailbyEmail(id: string): Promise<Entity | null> {
-  //   return await this.getModel().findUnique({
-  //     where: { id },
-  //   });
-  // }
-
   async list(
     filter: object = {},
     options?: any,
   ): Promise<FindAllResponse<Entity>> {
-    const { skip = 0, take = 10 } = options || {};
-    return await this.getModel().findMany({
-      where: filter,
-      skip,
-      take,
-    });
+    const { page = 2, limit = 10 } = options || {};
+    const [data, total] = await Promise.all([
+      this.getModel().findMany({
+        where: filter,
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.getModel().count({ where: filter }),
+    ]);
+    return { data, page, limit, total };
   }
 }

@@ -1,7 +1,7 @@
 import { $Enums, Order } from '@prisma/client';
-import { CreateOrderDto } from 'src/modules/order/dto/create-order.dto';
-import { UpdateOrderDto } from 'src/modules/order/dto/update-order.dto';
-import { OrderRepository } from 'src/modules/order/infras/repo/order.repo';
+import { CreateOrderDto } from 'src/modules/order/infras/dto/create-order.dto';
+import { UpdateOrderDto } from 'src/modules/order/infras/dto/update-order.dto';
+import { OrderRepository } from 'src/modules/order/infras/port/order.repo';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { PagingSchemaDTO } from 'src/shared/data-model';
 import { ModelName } from 'src/shared/modelName';

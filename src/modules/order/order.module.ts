@@ -3,7 +3,7 @@ import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
 
 import { PrismaModule } from 'src/shared/components/prisma/prisma.module';
-import { OrderRepository } from 'src/modules/order/infras/repo/order.repo';
+import { OrderRepository } from 'src/modules/order/infras/port/order.repo';
 
 @Module({
   controllers: [OrderController],
