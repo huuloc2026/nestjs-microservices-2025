@@ -1,5 +1,6 @@
 import { TokenUser } from '@prisma/client';
 import { PagingSchemaDTO } from 'src/shared/data-model';
+import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
 import { FindAllResponse } from 'src/shared/types/common.types';
 
 export interface ITokenUseCase<T> {
@@ -12,5 +13,9 @@ export interface ITokenUseCase<T> {
   update(id: string, dto: Partial<T>): Promise<T>;
   remove(id: string): Promise<boolean>;
 }
-
+export abstract class ITokenRepository extends BaseRepositoryPrisma<
+  TokenUser,
+  any,
+  any
+> {}
 // export abstract class TokenUseCase implements ITokenUseCase<TokenUser>

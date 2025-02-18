@@ -17,5 +17,8 @@ export interface IProductUseCase {
     options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<Product>>;
 }
-export interface IProductRepository
-  extends BaseRepositoryPrisma<Product, CreateProductDto, UpdateProductDto> {}
+export class IProductRepository extends BaseRepositoryPrisma<
+  Product,
+  CreateProductDto,
+  UpdateProductDto
+> {}

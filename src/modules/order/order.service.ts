@@ -1,16 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-import { $Enums, BaseStatus, Order } from '@prisma/client';
-import { OrderRepository } from 'src/modules/order/order.repo';
-import { BaseServiceAbstract } from 'src/shared/services/base.abstract.service';
-import { BaseAbstractRepository } from 'src/shared/repository/base.abstract.repository';
-import { PagingSchemaDTO } from 'src/shared/data-model';
-import { FindAllResponse } from 'src/shared/types/common.types';
+
+import { OrderUseCase } from 'src/modules/order/dto/interface';
+import { OrderRepository } from 'src/modules/order/infras/repo/order.repo';
+
+import { PrismaService } from 'src/shared/components/prisma/prisma.service';
+import { ModelName } from 'src/shared/modelName';
 
 @Injectable()
-export class OrderService extends BaseServiceAbstract<Order> {
-  constructor(private readonly orderRepository: OrderRepository) {
-    super(orderRepository);
+export class OrderService extends OrderUseCase {
+  constructor(protected readonly prisma: PrismaService) {
+    super(prisma, ModelName.Order);
   }
 }

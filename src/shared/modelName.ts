@@ -8,11 +8,7 @@
 //   Permission = 'permission',
 //   Cart = 'cart',
 //   CartItem = 'cartItem',
-//   ProductCategory = 'productCategory',
-//   ProductImage = 'productImage',
-//   ProductVariant = 'productVariant',
-//   ProductVariantOption = 'productVariantOption',
-//   ProductVariantOptionValue = 'productVariantOptionValue',
+
 // }
 export class ModelName {
   static Product = 'product';
@@ -25,9 +21,4 @@ export class ModelName {
   static Permission = 'permission';
   static Cart = 'cart';
   static CartItem = 'cartItem';
-  static ProductCategory = 'productCategory';
-  static ProductImage = 'productImage';
-  static ProductVariant = 'productVariant';
-  static ProductVariantOption = 'productVariantOption';
-  static ProductVariantOptionValue = 'productVariantOptionValue';
 }

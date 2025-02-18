@@ -16,7 +16,7 @@ export class TokenRepoService
     private readonly repository: TokenRepository,
     prisma: PrismaService,
   ) {
-    super(prisma, prisma.tokenUser);
+    super(prisma, ModelName.TokenUser);
   }
 
   async storeToken(userId: string, accessToken: string, refreshToken: string) {
@@ -25,6 +25,7 @@ export class TokenRepoService
     return result;
   }
 
+  //#TODO: check tokenUser
   async CheckManyTokenStored(userId: string): Promise<void> {
     const LimitDevice = 2;
     const result = await this.prisma.tokenUser.findMany({

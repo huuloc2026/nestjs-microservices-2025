@@ -12,20 +12,23 @@ export interface IBaseUseCase<T> {
   update(id: string, dto: Partial<T>): Promise<T>;
   remove(id: string): Promise<boolean>;
 }
-
 export abstract class BaseUseCase<T> implements IBaseUseCase<T> {
   constructor(
     protected readonly prisma: PrismaService,
-    private readonly model: any,
+    private readonly model: string,
   ) {}
 
+  // Phương thức để lấy model
+  protected getModel() {
+    return this.prisma[this.model];
+  }
+
   async create(dto: Partial<T>): Promise<T> {
-    return this.model.create({ data: dto });
+    return this.getModel().create({ data: dto });
   }
 
   async findMany(userId: string) {
-    const exist = await this.model.findMany({ where: { userId } });
-    return exist;
+    return this.getModel().findMany({ where: { userId } });
   }
 
   async findAll(
@@ -35,38 +38,30 @@ export abstract class BaseUseCase<T> implements IBaseUseCase<T> {
     const { page = 1, limit = 10 } = options || {};
 
     const [data, total] = await this.prisma.$transaction([
-      this.model.findMany({
+      this.getModel().findMany({
         where: filter,
         take: limit,
         skip: (page - 1) * limit,
       }),
-      this.model.count({ where: filter }),
+      this.getModel().count({ where: filter }),
     ]);
 
     return { data, page, limit, total };
-
-    //   return {
-    //     data,
-    //     total,
-    //     page,
-    //     limit,
-    //     totalPages: Math.ceil(total / limit),
-    //   };
   }
 
   async findOneById(id: string): Promise<T | null> {
-    return this.model.findUnique({ where: { id } });
+    return this.getModel().findUnique({ where: { id } });
   }
 
   async update(id: string, dto: Partial<T>): Promise<T> {
-    return this.model.update({
+    return this.getModel().update({
       where: { id },
       data: dto,
     });
   }
 
   async remove(id: string): Promise<boolean> {
-    await this.model.delete({ where: { id } });
+    await this.getModel().delete({ where: { id } });
     return true;
   }
 }
