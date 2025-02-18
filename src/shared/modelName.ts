@@ -19,6 +19,7 @@ export class ModelName {
   static User = 'user';
   static Category = 'category';
   static Order = 'order';
+  static TokenUser = 'tokenUser';
   static OrderItem = 'orderItem';
   static Role = 'role';
   static Permission = 'permission';

@@ -6,7 +6,7 @@ import { User } from '@prisma/client';
 import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
 import { CreateUserDto, UpdateUserDto } from 'src/modules/user/dto/user.dto';
 import { ModelName } from 'src/shared/modelName';
-import { UserNotFound } from 'src/modules/user/usecase';
+import { UserNotFound } from 'src/modules/user/usecase/error';
 
 @Injectable()
 export class UserRepository extends BaseRepositoryPrisma<
@@ -20,9 +20,6 @@ export class UserRepository extends BaseRepositoryPrisma<
 
   async findbyEmail(email: string) {
     const user = await this.prisma.user.findFirst({ where: { email } });
-    if (!user) {
-      throw new NotFoundException(UserNotFound);
-    }
     return user;
   }
 }

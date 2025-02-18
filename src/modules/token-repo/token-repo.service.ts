@@ -1,92 +1,48 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-
 import { TokenUser } from '@prisma/client';
-import { TokenUserRepository } from 'src/modules/token-repo/TokenUserRepository';
+import { TokenRepository } from 'src/modules/token-repo/infras/repo/TokenUserRepository';
+import { ITokenUseCase } from 'src/modules/token-repo/usecase';
+
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
-import { PagingSchemaDTO } from 'src/shared/data-model';
-import { BaseServiceAbstract } from 'src/shared/services/base.abstract.service';
-import { FindAllResponse } from 'src/shared/types/common.types';
+import { ModelName } from 'src/shared/modelName';
+import { BaseUseCase } from 'src/shared/services/base-usecase';
 
 @Injectable()
-export class TokenRepoService extends BaseServiceAbstract<TokenUser> {
-  private modelName = 'TokenUser';
+export class TokenRepoService
+  extends BaseUseCase<TokenUser>
+  implements ITokenUseCase<TokenUser>
+{
   constructor(
-    private readonly tokenRepositoy: TokenUserRepository,
-    private prisma: PrismaService,
+    private readonly repository: TokenRepository,
+    prisma: PrismaService,
   ) {
-    super(tokenRepositoy);
+    super(prisma, prisma.tokenUser);
   }
 
-  async create(
-    create_dto:
-      | {
-          id: string;
-          userId: string;
-          accessToken: string;
-          refreshToken: string;
-          status: boolean;
-          createdAt: Date;
-          updatedAt: Date;
-        }
-      | any,
-  ): Promise<{
-    id: string;
-    userId: string;
-    accessToken: string;
-    refreshToken: string;
-    status: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-  }> {
-    return await this.tokenRepositoy.create(create_dto);
+  async storeToken(userId: string, accessToken: string, refreshToken: string) {
+    const data = { userId, accessToken, refreshToken };
+    const result = await this.repository.insert(data);
+    return result;
   }
 
-  findAll(
-    filter?: object,
-    options?: PagingSchemaDTO,
-  ): Promise<
-    FindAllResponse<{
-      id: string;
-      userId: string;
-      accessToken: string;
-      refreshToken: string;
-      status: boolean;
-      createdAt: Date;
-      updatedAt: Date;
-    }>
-  > {
-    return this.tokenRepositoy.findAll(filter, options);
-  }
-
-  async storeToken(
-    userId: string,
-    accessToken: string,
-    refreshToken: string,
-  ): Promise<TokenUser> {
-    return this.prisma[this.modelName].create({
-      data: {
-        refreshToken,
-        accessToken,
-        userId,
-      },
+  async CheckManyTokenStored(userId: string): Promise<void> {
+    const LimitDevice = 2;
+    const result = await this.prisma.tokenUser.findMany({
+      where: { userId },
     });
-  }
-  async CheckToken(userId: string): Promise<TokenUser> {
-    return await this.prisma[this.modelName].findOne({
-      where: {
-        userId: userId,
-      },
-    });
-  }
-  async CheckManyTokenStored(userId: string): Promise<any> {
-    const resutl = await this.prisma[this.modelName].findMany({
-      where: {
-        userId: userId,
-      },
-    });
-    if (resutl.length > 3) {
-      throw new BadRequestException('Too many login attempts');
+    if (result.length > LimitDevice) {
+      throw new BadRequestException(
+        `Too many login attempts. Less than ${LimitDevice} Device. Please Log out `,
+      );
     }
-    return resutl;
+  }
+
+  async deleteByToken(token: string): Promise<boolean> {
+    try {
+      await this.repository.list({ where: { token } });
+      return true;
+    } catch (error) {
+      throw new BadRequestException('Failed to delete token');
+    }
   }
 }

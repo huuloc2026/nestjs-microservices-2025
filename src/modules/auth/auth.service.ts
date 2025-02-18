@@ -35,6 +35,7 @@ export class AuthService extends AuthAbstractService {
   //TODO:
   async register(data: any) {
     const existingUser = await this.userService.findbyEmail(data.email);
+
     if (existingUser) {
       throw new ForbiddenException('Email already exists');
     }
@@ -64,29 +65,29 @@ export class AuthService extends AuthAbstractService {
       user.password,
       user.salt,
     );
-
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
-
     const userPayload: TokenPayload =
       this.commonService.getPayloadFromUser(user);
 
     const { accessToken, refreshToken } = await this.generateToken(userPayload);
-    const checkToken = await this.TokenService.CheckManyTokenStored(user.id);
-    // stored token
+    //Check Limit Device
+    await this.TokenService.CheckManyTokenStored(user.id);
+
+    // // stored token
     await this.TokenService.storeToken(user.id, accessToken, refreshToken);
     return { accessToken, refreshToken };
   }
 
   private async verifyPlainContentWithHashedContent(
-    plain_text: string,
-    hashed_text: string,
-    salt_user: string,
+    plainText: string,
+    hashedText: string,
+    saltOfUser: string,
   ): Promise<boolean> {
     const is_matching: boolean = await bcrypt.compare(
-      `${plain_text}.${salt_user}`,
-      hashed_text,
+      `${plainText}.${saltOfUser}`,
+      hashedText,
     );
     if (!is_matching) {
       throw new UnauthorizedException('Invalid credentials');

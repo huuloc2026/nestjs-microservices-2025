@@ -49,6 +49,12 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
     });
   }
 
+  // async getDetailbyEmail(id: string): Promise<Entity | null> {
+  //   return await this.getModel().findUnique({
+  //     where: { id },
+  //   });
+  // }
+
   async list(
     filter: object = {},
     options?: any,

@@ -1,0 +1,72 @@
+import { PrismaService } from 'src/shared/components/prisma/prisma.service';
+import { PagingSchemaDTO } from 'src/shared/data-model';
+import { FindAllResponse } from 'src/shared/types/common.types';
+
+export interface IBaseUseCase<T> {
+  create(dto: Partial<T>): Promise<T>;
+  findAll(
+    filter?: object,
+    options?: PagingSchemaDTO,
+  ): Promise<FindAllResponse<T>>;
+  findOneById(id: string): Promise<T | null>;
+  update(id: string, dto: Partial<T>): Promise<T>;
+  remove(id: string): Promise<boolean>;
+}
+
+export abstract class BaseUseCase<T> implements IBaseUseCase<T> {
+  constructor(
+    protected readonly prisma: PrismaService,
+    private readonly model: any,
+  ) {}
+
+  async create(dto: Partial<T>): Promise<T> {
+    return this.model.create({ data: dto });
+  }
+
+  async findMany(userId: string) {
+    const exist = await this.model.findMany({ where: { userId } });
+    return exist;
+  }
+
+  async findAll(
+    filter: object = {},
+    options?: PagingSchemaDTO,
+  ): Promise<FindAllResponse<T>> {
+    const { page = 1, limit = 10 } = options || {};
+
+    const [data, total] = await this.prisma.$transaction([
+      this.model.findMany({
+        where: filter,
+        take: limit,
+        skip: (page - 1) * limit,
+      }),
+      this.model.count({ where: filter }),
+    ]);
+
+    return { data, page, limit, total };
+
+    //   return {
+    //     data,
+    //     total,
+    //     page,
+    //     limit,
+    //     totalPages: Math.ceil(total / limit),
+    //   };
+  }
+
+  async findOneById(id: string): Promise<T | null> {
+    return this.model.findUnique({ where: { id } });
+  }
+
+  async update(id: string, dto: Partial<T>): Promise<T> {
+    return this.model.update({
+      where: { id },
+      data: dto,
+    });
+  }
+
+  async remove(id: string): Promise<boolean> {
+    await this.model.delete({ where: { id } });
+    return true;
+  }
+}
