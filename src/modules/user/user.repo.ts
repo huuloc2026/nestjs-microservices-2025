@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 
 import { User } from '@prisma/client';
-import { BaseAbstractRepository } from 'src/shared/repository/base.abstract.repository';
+
 import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
 import { CreateUserDto, UpdateUserDto } from 'src/modules/user/dto/user.dto';
 import { ModelName } from 'src/shared/modelName';
+import { UserNotFound } from 'src/modules/user/usecase';
 
 @Injectable()
 export class UserRepository extends BaseRepositoryPrisma<
@@ -17,7 +18,11 @@ export class UserRepository extends BaseRepositoryPrisma<
     super(prisma, ModelName.User);
   }
 
-  findbyEmail(email: string) {
-    return this.prisma.user.findFirst({ where: { email } });
+  async findbyEmail(email: string) {
+    const user = await this.prisma.user.findFirst({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(UserNotFound);
+    }
+    return user;
   }
 }

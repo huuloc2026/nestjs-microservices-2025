@@ -11,11 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import { Requester, TokenPayload } from 'src/shared/interface/interface';
-import {
-  UserLoginDTO,
-  UserRegistrationDTO,
-  UserUpdateDTO,
-} from 'src/modules/user/dto/user.dto';
+import { UserLoginDTO } from 'src/modules/user/dto/user.dto';
 import { AuthAbstractService } from 'src/modules/auth/interface/auth.port';
 import { User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';

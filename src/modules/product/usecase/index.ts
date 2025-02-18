@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from '@prisma/client';
 import { CreateProductDto } from 'src/modules/product/dto/create-product.dto';
 import { UpdateProductDto } from 'src/modules/product/dto/update-product.dto';
@@ -6,6 +6,7 @@ import {
   IProductRepository,
   IProductUseCase,
 } from 'src/modules/product/interface';
+import { NotfoundProduct } from 'src/modules/product/usecase/error';
 import { PagingSchemaDTO } from 'src/shared/data-model';
 import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
 import { FindAllResponse } from 'src/shared/types/common.types';
@@ -20,11 +21,11 @@ export class ProductUseCase implements IProductUseCase {
   ) {}
 
   async create(product: CreateProductDto): Promise<Product> {
-    return this.repository.insert(product);
+    return await this.repository.insert(product);
   }
 
   async update(id: string, product: UpdateProductDto): Promise<Product> {
-    return this.repository.update(id, product);
+    return await this.repository.update(id, product);
   }
 
   async delete(id: string): Promise<Product> {
@@ -32,7 +33,11 @@ export class ProductUseCase implements IProductUseCase {
   }
 
   async getDetail(id: string): Promise<Product> {
-    return this.repository.getDetail(id);
+    const product = await this.repository.getDetail(id);
+    if (!product) {
+      throw new NotFoundException(NotfoundProduct);
+    }
+    return product;
   }
 
   async list(
@@ -40,9 +45,9 @@ export class ProductUseCase implements IProductUseCase {
     options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<Product>> {
     filter = { ...filter, status: 'ACTIVE' };
-    return this.repository.list(filter, options);
+    return await this.repository.list(filter, options);
   }
   async softdelete(id: string): Promise<Product> {
-    return this.repository.softdelete(id);
+    return await this.repository.softdelete(id);
   }
 }

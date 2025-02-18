@@ -17,12 +17,12 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
 
   // Insert an entity into the database
   async insert(data: createDto): Promise<Entity> {
-    return this.getModel().create({ data });
+    return await this.getModel().create({ data });
   }
 
   // Update an entity by ID
   async update(id: string, data: updateDto): Promise<Entity> {
-    return this.getModel().update({
+    return await this.getModel().update({
       where: { id },
       data,
     });
@@ -30,21 +30,21 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
 
   // Delete an entity by ID
   async softdelete(id: string): Promise<Entity> {
-    return this.getModel().update({
+    return await this.getModel().update({
       where: { id },
       data: { status: BaseStatus.INACTIVE },
     });
   }
 
   async delete(id: string): Promise<Entity> {
-    return this.getModel().delete({
+    return await this.getModel().delete({
       where: { id },
     });
   }
 
   // Get the details of an entity by ID
   async getDetail(id: string): Promise<Entity | null> {
-    return this.getModel().findUnique({
+    return await this.getModel().findUnique({
       where: { id },
     });
   }
@@ -54,7 +54,7 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
     options?: any,
   ): Promise<FindAllResponse<Entity>> {
     const { skip = 0, take = 10 } = options || {};
-    return this.getModel().findMany({
+    return await this.getModel().findMany({
       where: filter,
       skip,
       take,
