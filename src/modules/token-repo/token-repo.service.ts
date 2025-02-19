@@ -51,10 +51,15 @@ export class TokenRepoService
   }
 
   async CheckTokenOfUser(userId: string): Promise<TokenUser[]> {
-    return this.prisma.tokenUser.findMany({ where: { userId } });
+    return await this.prisma.tokenUser.findMany({ where: { userId } });
   }
 
-  async CheckKeyValid(userid: string) {}
+  async CheckKeyValid(userId: string): Promise<Boolean> {
+    await this.prisma.tokenUser.findFirstOrThrow({
+      where: { userId },
+    });
+    return true;
+  }
 
   async deleteByToken(token: string): Promise<boolean> {
     try {

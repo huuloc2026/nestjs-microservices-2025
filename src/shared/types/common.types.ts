@@ -1,3 +1,10 @@
+import { Request as ExpressRequest } from 'express';
+import { TokenPayload } from 'src/shared/interface/interface';
+
+export interface AuthenticatedRequest extends ExpressRequest {
+  user?: TokenPayload;
+}
+
 export enum SORT_TYPE {
   'DESC' = 'desc',
   'ASC' = 'acs',

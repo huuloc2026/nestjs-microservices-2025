@@ -18,7 +18,7 @@ export class UserService extends UserUseCase<User> {
   async findbyEmail(email: string) {
     const exist = await this.prisma.user.findFirst({ where: { email } });
     if (!exist) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
     return exist;
   }

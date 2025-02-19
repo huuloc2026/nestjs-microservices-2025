@@ -169,7 +169,6 @@ export class AuthService extends AuthAbstractService {
       existUser.password,
       existUser.salt,
     );
-
     if (!checkMatch) {
       throw new BadRequestException('Wrong password');
     }
