@@ -81,7 +81,7 @@ export class AuthService extends AuthAbstractService {
     //await this.TokenService.CheckManyTokenStored(user.id);
 
     // // stored token
-    //await this.TokenService.storeToken(user.id, accessToken, refreshToken);
+    await this.TokenService.storeToken(user.id, accessToken, refreshToken);
 
     return { accessToken, refreshToken };
   }
@@ -109,9 +109,8 @@ export class AuthService extends AuthAbstractService {
   }
 
   async profile(email: string): Promise<any> {
-    const user = await this.userService.findbyEmail(email);
-    const safeUser = this.commonService.getEssentialUserData(user);
-    return safeUser;
+    const user = await this.userService.profile(email);
+    return user;
   }
 
   async checkjwt(UserExist: string) {

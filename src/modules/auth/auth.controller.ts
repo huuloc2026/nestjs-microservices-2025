@@ -35,10 +35,11 @@ export class AuthController {
   register(@Body() newUser: CreateAuthDto) {
     return this.authService.register(newUser);
   }
-  @Post('checkjwt')
+
+  @Get('me')
   @HttpCode(HttpStatus.OK)
-  checkjwt(@Body() UserExist: any) {
-    return this.authService.checkjwt(UserExist);
+  profile(@Req() req: AuthenticatedRequest) {
+    return this.authService.profile(req.user.email);
   }
 
   @Post('login')
@@ -72,9 +73,9 @@ export class AuthController {
     return this.authService.verifyAccount(data.email, data.verifyCode);
   }
 
-  @Get('me')
-  @HttpCode(HttpStatus.OK)
-  profile(@Req() req: AuthenticatedRequest) {
-    return this.authService.profile(req.user.email);
-  }
+  // @Post('checkjwt')
+  // @HttpCode(HttpStatus.OK)
+  // checkjwt(@Body() UserExist: any) {
+  //   return this.authService.checkjwt(UserExist);
+  // }
 }

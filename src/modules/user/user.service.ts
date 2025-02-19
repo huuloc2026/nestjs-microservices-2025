@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { User } from '@prisma/client';
 import { CommonService } from 'src/common/common.service';
@@ -30,5 +35,16 @@ export class UserService extends UserUseCase<User> {
     const existUser = await this.findbyEmail(id);
 
     return this.commonService.getEssentialUserData(existUser);
+  }
+  async profile(email: string): Promise<any> {
+    const user = await this.findbyEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    if (user.status === 'BANNED' || user.status === 'DELETED') {
+      throw new UnauthorizedException('User banned or Deleted');
+    }
+    const safeUser = this.commonService.getEssentialUserData(user);
+    return safeUser;
   }
 }
