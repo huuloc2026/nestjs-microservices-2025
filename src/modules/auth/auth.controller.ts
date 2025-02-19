@@ -3,26 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
   Req,
-  Delete,
-  Query,
   HttpCode,
   HttpStatus,
-  UnauthorizedException,
   ForbiddenException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UserLoginDTO, UserVerifyDTO } from 'src/modules/user/dto/user.dto';
 import {
   ChangePasswordDTO,
   forgotpasswordDTO,
 } from 'src/modules/auth/dto/changepasswordDTO';
 import { Public } from 'src/shared/decorators/public.decrators';
-import { Request } from 'express';
 import { AuthenticatedRequest } from 'src/shared/types/common.types';
 
 @Controller('auth')
@@ -81,10 +74,4 @@ export class AuthController {
   verify(@Body() data: UserVerifyDTO) {
     return this.authService.verifyAccount(data.email, data.verifyCode);
   }
-
-  // @Post('checkjwt')
-  // @HttpCode(HttpStatus.OK)
-  // checkjwt(@Body() UserExist: any) {
-  //   return this.authService.checkjwt(UserExist);
-  // }
 }
