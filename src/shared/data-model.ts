@@ -2,14 +2,9 @@ import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
-  IsInt,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
   IsUUID,
-  Length,
-  Matches,
   Max,
   Min,
 } from 'class-validator';

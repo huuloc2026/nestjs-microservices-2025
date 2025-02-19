@@ -9,8 +9,10 @@ import {
   Put,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { PagingSchemaDTO } from 'src/shared/data-model';
 
 @Controller('product')
 export class ProductController {
@@ -24,8 +26,8 @@ export class ProductController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.productService.list();
+  findAll(@Query() options: PagingSchemaDTO) {
+    return this.productService.list({}, options);
   }
 
   @Get(':id')

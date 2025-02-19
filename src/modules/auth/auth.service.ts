@@ -1,20 +1,17 @@
+import * as bcrypt from 'bcrypt';
 import {
   BadRequestException,
   ForbiddenException,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UserService } from 'src/modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 
 import { Requester, TokenPayload } from 'src/shared/interface/interface';
 import { UserLoginDTO } from 'src/modules/user/dto/user.dto';
 
-import { User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { CommonService } from 'src/common/common.service';
 import {
@@ -23,7 +20,6 @@ import {
 } from 'src/modules/auth/dto/changepasswordDTO';
 import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
 import { AuthAbstractService } from 'src/modules/auth/interface';
-import { USER_SERVICE } from 'src/modules/user/interface/user-di.token';
 
 @Injectable()
 export class AuthService extends AuthAbstractService {
@@ -43,10 +39,9 @@ export class AuthService extends AuthAbstractService {
     if (existingUser) {
       throw new ForbiddenException('Email already exists');
     }
-
+    //generate salt, otp
     const salt = await this.commonService.generateSalt();
     const newOTP = this.commonService.generateOTP();
-
     const hashedPassword = await bcrypt.hash(`${data.password}.${salt}`, 10);
     const newUserInfor = {
       ...data,
@@ -54,8 +49,9 @@ export class AuthService extends AuthAbstractService {
       salt,
       verifyCode: newOTP.toString(),
     };
+    // insert new user
     const user = await this.userService.create(newUserInfor);
-
+    // return user infor basic
     return this.commonService.getUserOmitPassword(user);
   }
   //TODO:
@@ -73,15 +69,19 @@ export class AuthService extends AuthAbstractService {
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    if (user.status === 'BANNED') {
+      throw new ForbiddenException('User banned');
+    }
     const userPayload: TokenPayload =
       this.commonService.getPayloadFromUser(user);
 
     const { accessToken, refreshToken } = await this.generateToken(userPayload);
     //Check Limit Device
-    await this.TokenService.CheckManyTokenStored(user.id);
+    //await this.TokenService.CheckManyTokenStored(user.id);
 
     // // stored token
-    await this.TokenService.storeToken(user.id, accessToken, refreshToken);
+    //await this.TokenService.storeToken(user.id, accessToken, refreshToken);
 
     return { accessToken, refreshToken };
   }
@@ -108,16 +108,17 @@ export class AuthService extends AuthAbstractService {
     await this.userService.update(userId, dto);
   }
 
-  async profile(email: string): Promise<Omit<User, 'password' | 'salt'>> {
-    console.log(email);
+  async profile(email: string): Promise<any> {
     const user = await this.userService.findbyEmail(email);
-    console.log(user);
-    const safeUser = this.commonService.getUserOmitPassword(user);
+    const safeUser = this.commonService.getEssentialUserData(user);
     return safeUser;
   }
 
-  async checkjwt(UserExist) {
-    return 'checkjwt';
+  async checkjwt(UserExist: string) {
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMzhlYzdkMi1kMjdjLTRlNDgtOTE4ZS1iM2NkY2FkYzM2ZjUiLCJlbWFpbCI6InNBQTEyMzEyYXNkc2Eyc3NzZHNzc3NzYXNkQGdtYWlsLmNvbSIsInJvbGUiOiJDTElFTlQiLCJpYXQiOjE3Mzk5NjgxNDEsImV4cCI6MTc0MDA1NDU0MX0.YpCnw1cgnLsVfqMxoqhzBT9lYdHeY6ewkw1Lb_fqk5w';
+    const decode = await this.VerifyToken(token, 'AT');
+    return decode;
   }
 
   generateAccessToken(payload: TokenPayload) {

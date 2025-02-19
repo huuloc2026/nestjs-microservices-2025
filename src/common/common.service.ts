@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { omit, pick } from 'lodash';
 import { TokenPayload } from 'src/shared/interface/interface';
-import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
 @Injectable()
 export class CommonService {
   constructor(private configService: ConfigService) {}
@@ -14,7 +14,7 @@ export class CommonService {
     return Secret;
   }
   async generateSalt() {
-    return await bcrypt.genSalt(10);
+    return crypto.randomBytes(20).toString('hex');
   }
   generateOTP(): number {
     // Declare a digits variable

@@ -1,0 +1,3 @@
+service ProductService {
+  rpc GetProduct (ProductRequest) returns (ProductResponse);
+}

@@ -18,6 +18,9 @@ import { TokenRepoModule } from './modules/token-repo/token-repo.module';
 import { RedisModule } from './shared/components/redis/redis.module';
 import { SharedModule } from './shared/shared.module';
 import { ClientModule } from './modules/client/client.module';
+import { AtStrategy } from 'src/shared/strategies/at.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { AtGuard } from 'src/shared/guard';
 
 @Module({
   imports: [
@@ -40,6 +43,14 @@ import { ClientModule } from './modules/client/client.module';
     ClientModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    AtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
+    },
+  ],
 })
 export class AppModule {}
