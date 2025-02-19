@@ -13,9 +13,7 @@ export interface Requester extends TokenPayload {}
 export const filterCond = {
   status: BaseStatus.ACTIVE,
 };
-export interface IRepository<Entity, CreateDto, UpdateDto>
-  extends ICommandRepository<Entity, CreateDto, UpdateDto>,
-    IQueryRepository<Entity> {}
+
 export interface ICommandRepository<Entity, CreateDto, UpdateDto> {
   insert(data: CreateDto): Promise<Entity>;
   update(id: string, data: UpdateDto): Promise<Entity>;
@@ -28,3 +26,7 @@ export interface IQueryRepository<Entity> {
     options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<Entity>>;
 }
+
+export interface IRepository<Entity, CreateDto, UpdateDto>
+  extends ICommandRepository<Entity, CreateDto, UpdateDto>,
+    IQueryRepository<Entity> {}

@@ -53,7 +53,7 @@ export class BaseRepositoryPrisma<Entity, createDto, updateDto>
     filter: object = {},
     options?: any,
   ): Promise<FindAllResponse<Entity>> {
-    const { page = 2, limit = 10 } = options || {};
+    const { page = 1, limit = 10 } = options || {};
     const [data, total] = await Promise.all([
       this.getModel().findMany({
         where: filter,
