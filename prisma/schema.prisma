@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,45 +8,44 @@ datasource db {
 }
 
 model Client {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  email     String   @unique
+  email     String     @unique
   password  String
-  status    BaseStatus  @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
+  status    BaseStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  phone     String?
-  role      Role     @default(CLIENT)
-  gender    Gender?  @default(OTHER)
-  salt      String  @default("000000")
+  id         String      @id @default(uuid())
+  name       String
+  email      String      @unique
+  password   String
+  phone      String?
+  role       Role        @default(CLIENT)
+  gender     Gender?     @default(OTHER)
+  salt       String      @default("000000")
   verifyCode String?
-  avatar    String?
-  isVerify  Boolean  @default(false)
-  status    BaseStatus  @default(ACTIVE)
-  orders    Order[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  cart      Cart?
-  token     TokenUser[]
+  avatar     String?
+  isVerify   Boolean     @default(false)
+  status     BaseStatus  @default(ACTIVE)
+  orders     Order[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  cart       Cart?
+  token      TokenUser[]
 }
 
 model TokenUser {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken String
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String
   refreshToken String
-  status    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Product {
@@ -59,7 +57,7 @@ model Product {
   imageUrl    String?
   categoryId  String?
   category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  status    BaseStatus  @default(ACTIVE)
+  status      BaseStatus  @default(ACTIVE)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   OrderItem   OrderItem[]
@@ -81,10 +79,10 @@ model Order {
   totalPrice Float
   status     OrderStatus @default(PENDING)
   items      OrderItem[]
-  
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  Payment    Payment[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Payment   Payment[]
 }
 
 model OrderItem {
@@ -117,8 +115,6 @@ model CartItem {
   createdAt DateTime @default(now())
 }
 
-
-
 model Payment {
   id        String        @id @default(uuid())
   orderId   String
@@ -134,13 +130,15 @@ enum Role {
   SELLER
   CLIENT
 }
+
 enum BaseStatus {
-  ACTIVE 
-  PENDING 
-  INACTIVE 
-  BANNED 
-  DELETED 
+  ACTIVE
+  PENDING
+  INACTIVE
+  BANNED
+  DELETED
 }
+
 enum Gender {
   MALE
   FEMALE
@@ -148,7 +146,6 @@ enum Gender {
 }
 
 enum OrderStatus {
-  
   PENDING
   SHIPPED
   DELIVERED

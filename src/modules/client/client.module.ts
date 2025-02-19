@@ -6,7 +6,7 @@ import {
   CLIENT_REPOSITORY,
   CLIENT_SERVICE,
 } from 'src/modules/client/client-di';
-import { ICLIENT_REPOSITORY } from 'src/modules/client/core/port/client.repo.interface';
+
 const repositories: Provider[] = [
   { provide: CLIENT_REPOSITORY, useClass: PrismaClientRepository },
 ];

@@ -1,32 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { UserRepository } from 'src/modules/user/user.repo';
-import { $Enums, User } from '@prisma/client';
-import { IUserUseCase } from 'src/modules/user/interface';
-import { PagingSchemaDTO } from 'src/shared/data-model';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+
+import { User } from '@prisma/client';
+import { UserUseCase } from 'src/modules/user/interface';
+import { PrismaService } from 'src/shared/components/prisma/prisma.service';
+import { ModelName } from 'src/shared/modelName';
 
 @Injectable()
-export class UserService implements IUserUseCase<User> {
-  constructor(private readonly repository: UserRepository) {}
-
-  async create(data: User) {
-    return await this.repository.insert(data);
+export class UserService extends UserUseCase<User> {
+  constructor(protected readonly prisma: PrismaService) {
+    super(prisma, ModelName.User);
   }
 
-  async update(id: string, data: any): Promise<any> {
-    return await this.repository.update(id, data);
-  }
-
-  async findOneById(id: string) {
-    return await this.repository.getDetail(id);
-  }
-
-  async findAll(filter?: object, options?: PagingSchemaDTO) {
-    return await this.repository.list(filter, options);
-  }
   async findbyEmail(email: string) {
-    return await this.repository.findbyEmail(email);
+    const exist = await this.prisma.user.findFirst({ where: { email } });
+    if (!exist) {
+      throw new NotFoundException();
+    }
+    return exist;
   }
-  async remove(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async checkExistEmail(email: string) {
+    return await this.prisma.user.findFirst({ where: { email } });
   }
 }

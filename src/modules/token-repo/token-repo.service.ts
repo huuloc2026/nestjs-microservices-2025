@@ -38,6 +38,22 @@ export class TokenRepoService
     }
   }
 
+  /**
+   * Delete all tokens of a user
+   */
+  async DeleteAllTokenOfUser(userId: string): Promise<boolean> {
+    try {
+      await this.prisma.tokenUser.deleteMany({ where: { userId } });
+      return true;
+    } catch (error) {
+      throw new BadRequestException('Failed to delete all tokens');
+    }
+  }
+
+  async CheckTokenOfUser(userId: string): Promise<TokenUser[]> {
+    return this.prisma.tokenUser.findMany({ where: { userId } });
+  }
+
   async deleteByToken(token: string): Promise<boolean> {
     try {
       await this.repository.list({ where: { token } });

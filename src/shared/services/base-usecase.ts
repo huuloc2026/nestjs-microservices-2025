@@ -24,11 +24,11 @@ export abstract class BaseUseCase<T> implements IBaseUseCase<T> {
   }
 
   async create(dto: Partial<T>): Promise<T> {
-    return this.getModel().create({ data: dto });
+    return await this.getModel().create({ data: dto });
   }
 
   async findMany(userId: string) {
-    return this.getModel().findMany({ where: { userId } });
+    return await this.getModel().findMany({ where: { userId } });
   }
 
   async findAll(
@@ -50,11 +50,11 @@ export abstract class BaseUseCase<T> implements IBaseUseCase<T> {
   }
 
   async findOneById(id: string): Promise<T | null> {
-    return this.getModel().findUnique({ where: { id } });
+    return await this.getModel().findUnique({ where: { id } });
   }
 
   async update(id: string, dto: Partial<T>): Promise<T> {
-    return this.getModel().update({
+    return await this.getModel().update({
       where: { id },
       data: dto,
     });

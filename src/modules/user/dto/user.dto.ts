@@ -5,6 +5,7 @@ import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
 import { Gender } from '@prisma/client';
 import { User } from '@prisma/client';
+import { UserModel } from 'src/modules/user/user.model';
 
 export class CreateUserDto {
   @IsNotEmpty()

@@ -53,8 +53,7 @@ export class AuthController {
   }
 
   @Post('me')
-  profile(@Body() UserExist: string) {
-    UserExist = 'zxczzxczxzxzxcccxcssasssssd@gmail.com';
-    return this.authService.profile(UserExist);
+  profile(@Body() data: UserLoginDTO) {
+    return this.authService.profile(data.email);
   }
 }

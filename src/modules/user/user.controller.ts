@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Inject,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -15,10 +16,14 @@ import {
   UserRegistrationDTO,
   UserUpdateDTO,
 } from './dto/user.dto';
+import { IUserService } from 'src/modules/user/interface';
+import { USER_SERVICE } from 'src/modules/user/interface/user-di.token';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @Inject(USER_SERVICE) private readonly userService: IUserService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

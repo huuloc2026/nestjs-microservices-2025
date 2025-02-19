@@ -11,7 +11,6 @@ export class CommonService {
     const AT_SECRET = `${this.configService.get<string>('AT_SECRET')}${salt}`;
     const RT_SECRET = `${this.configService.get<string>('RT_SECRET')}${salt}`;
     const Secret = type == 'AT' ? AT_SECRET : RT_SECRET;
-    console.log(Secret);
     return Secret;
   }
   async generateSalt() {

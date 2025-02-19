@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 
 import { Requester, TokenPayload } from 'src/shared/interface/interface';
 import { UserLoginDTO } from 'src/modules/user/dto/user.dto';
-import { AuthAbstractService } from 'src/modules/auth/interface/auth.port';
+
 import { User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { CommonService } from 'src/common/common.service';
@@ -21,6 +22,9 @@ import {
   forgotpasswordDTO,
 } from 'src/modules/auth/dto/changepasswordDTO';
 import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
+import { AuthAbstractService } from 'src/modules/auth/interface';
+import { USER_SERVICE } from 'src/modules/user/interface/user-di.token';
+
 @Injectable()
 export class AuthService extends AuthAbstractService {
   constructor(
@@ -33,8 +37,8 @@ export class AuthService extends AuthAbstractService {
     super();
   }
   //TODO:
-  async register(data: any) {
-    const existingUser = await this.userService.findbyEmail(data.email);
+  async register(data: CreateAuthDto): Promise<any> {
+    const existingUser = await this.userService.checkExistEmail(data.email);
 
     if (existingUser) {
       throw new ForbiddenException('Email already exists');
@@ -44,14 +48,15 @@ export class AuthService extends AuthAbstractService {
     const newOTP = this.commonService.generateOTP();
 
     const hashedPassword = await bcrypt.hash(`${data.password}.${salt}`, 10);
-    const user: User = await this.userService.create({
+    const newUserInfor = {
       ...data,
-      verifyCode: newOTP.toString(),
       password: hashedPassword,
       salt,
-    });
+      verifyCode: newOTP.toString(),
+    };
+    const user = await this.userService.create(newUserInfor);
 
-    return user;
+    return this.commonService.getUserOmitPassword(user);
   }
   //TODO:
   async login(dto: UserLoginDTO) {
@@ -77,6 +82,7 @@ export class AuthService extends AuthAbstractService {
 
     // // stored token
     await this.TokenService.storeToken(user.id, accessToken, refreshToken);
+
     return { accessToken, refreshToken };
   }
 
@@ -103,10 +109,9 @@ export class AuthService extends AuthAbstractService {
   }
 
   async profile(email: string): Promise<Omit<User, 'password' | 'salt'>> {
+    console.log(email);
     const user = await this.userService.findbyEmail(email);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
+    console.log(user);
     const safeUser = this.commonService.getUserOmitPassword(user);
     return safeUser;
   }
@@ -171,6 +176,7 @@ export class AuthService extends AuthAbstractService {
       `${passwordBody.newPassword}.${existUser.salt}`,
       10,
     );
+
     // update in db
     await this.userService.update(existUser.id, {
       password: newHashedpassword,
@@ -179,6 +185,10 @@ export class AuthService extends AuthAbstractService {
     const Payload = this.commonService.getPayloadFromUser(existUser);
     //create new key
     const { accessToken, refreshToken } = await this.generateToken(Payload);
+    // delete all old session
+    await this.TokenService.DeleteAllTokenOfUser(existUser.id);
+    //store new Session
+    await this.TokenService.storeToken(existUser.id, accessToken, refreshToken);
 
     return {
       message: "'Successfully changed password'",

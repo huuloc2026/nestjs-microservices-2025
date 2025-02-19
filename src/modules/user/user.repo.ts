@@ -7,13 +7,10 @@ import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-pris
 import { CreateUserDto, UpdateUserDto } from 'src/modules/user/dto/user.dto';
 import { ModelName } from 'src/shared/modelName';
 import { UserNotFound } from 'src/modules/user/usecase/error';
+import { UserRepository } from 'src/modules/user/interface';
 
 @Injectable()
-export class UserRepository extends BaseRepositoryPrisma<
-  User,
-  CreateUserDto,
-  UpdateUserDto
-> {
+export class PrismaUserRepository extends UserRepository {
   constructor(protected readonly prisma: PrismaService) {
     super(prisma, ModelName.User);
   }
