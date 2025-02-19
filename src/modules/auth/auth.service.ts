@@ -3,6 +3,8 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -84,6 +86,10 @@ export class AuthService extends AuthAbstractService {
     await this.TokenService.storeToken(user.id, accessToken, refreshToken);
 
     return { accessToken, refreshToken };
+  }
+
+  async logout(id: string): Promise<Boolean> {
+    return await this.TokenService.DeleteAllTokenOfUser(id);
   }
 
   private async verifyPlainContentWithHashedContent(
@@ -212,5 +218,58 @@ export class AuthService extends AuthAbstractService {
       message: 'Successfully verify account',
     };
   }
-  async forgotpassword(data: forgotpasswordDTO) {}
+
+  async forgotpassword(
+    data: { newPassword: string; confirmPassword: string },
+    email: string,
+  ) {
+    const user = await this.userService.findbyEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const newOTP = await this.SendNewOTP(user.id);
+    Logger.log(`New OTP ${newOTP} sending to ${user.email}`, 'ForgetPassword');
+    //validated new otp <-> user in db
+    await this.ValidateNewOTP(email, newOTP);
+    //updated new password
+    await this.updateNewPassword(
+      user.id,
+      data.newPassword,
+      data.confirmPassword,
+    );
+    //revoke all session
+    await this.TokenService.DeleteAllTokenOfUser(user.id);
+    return {
+      message: 'Successfully new password. Please re-login',
+    };
+  }
+  async SendNewOTP(id: string) {
+    //genereate new OTP
+    const newOTP = this.commonService.generateOTP().toString();
+    // save new OTP to this user
+    await this.userService.update(id, { verifyCode: newOTP.toString() });
+    return newOTP;
+  }
+  async ValidateNewOTP(email: string, code: string) {
+    const user = await this.userService.findbyEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    if (code !== user.verifyCode) {
+      throw new UnauthorizedException('Invalid code');
+    }
+    return {
+      message: 'Successfully verify OTP',
+    };
+  }
+  async updateNewPassword(
+    id: string,
+    password: string,
+    confimrPassword: string,
+  ) {
+    if (password !== confimrPassword) {
+      throw new ForbiddenException('Password not match');
+    }
+    await this.userService.update(id, { password });
+  }
 }

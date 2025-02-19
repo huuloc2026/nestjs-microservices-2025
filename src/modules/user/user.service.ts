@@ -33,7 +33,6 @@ export class UserService extends UserUseCase<User> {
 
   async getUserWithRole(id: string) {
     const existUser = await this.findbyEmail(id);
-
     return this.commonService.getEssentialUserData(existUser);
   }
   async profile(email: string): Promise<any> {

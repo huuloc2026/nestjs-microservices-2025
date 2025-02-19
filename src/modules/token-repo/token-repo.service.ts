@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { TokenUser } from '@prisma/client';
 import { TokenRepository } from 'src/modules/token-repo/infras/repo/TokenUserRepository';
 import { ITokenUseCase } from 'src/modules/token-repo/usecase';
@@ -44,6 +44,7 @@ export class TokenRepoService
   async DeleteAllTokenOfUser(userId: string): Promise<boolean> {
     try {
       await this.prisma.tokenUser.deleteMany({ where: { userId } });
+      Logger.log(`Deleted all session of ${userId}`, 'TokenService');
       return true;
     } catch (error) {
       throw new BadRequestException('Failed to delete all tokens');

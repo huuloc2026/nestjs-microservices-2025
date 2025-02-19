@@ -15,9 +15,9 @@ export class ChangePasswordDTO {
 
 export class forgotpasswordDTO {
   @Expose()
-  email: string;
-  @Expose()
+  @IsNotEmpty()
   newPassword: string;
   @Expose()
+  @IsNotEmpty()
   confirmPassword: string;
 }

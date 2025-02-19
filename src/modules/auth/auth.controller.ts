@@ -42,11 +42,26 @@ export class AuthController {
     return this.authService.profile(req.user.email);
   }
 
+  @Post('forgotpassword')
+  @HttpCode(HttpStatus.CREATED)
+  forgotpassword(
+    @Body() data: { newPassword: string; confirmPassword: string },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.authService.forgotpassword({ ...data }, req.user.email);
+  }
+
   @Post('login')
   @Public()
   @HttpCode(HttpStatus.OK)
   login(@Body() UserExist: UserLoginDTO) {
     return this.authService.login(UserExist);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Req() req: AuthenticatedRequest) {
+    return this.authService.logout(req.user.sub);
   }
 
   @Post('changepassword')
@@ -59,12 +74,6 @@ export class AuthController {
       throw new ForbiddenException('Password not match');
     }
     return this.authService.ChangePassword(req.user.email, data);
-  }
-
-  @Post('forgotpassword')
-  @HttpCode(HttpStatus.CREATED)
-  forgotpassword(@Body() data: forgotpasswordDTO) {
-    return this.authService.forgotpassword(data);
   }
 
   @Post('verify')
