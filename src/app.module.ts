@@ -21,6 +21,7 @@ import { ClientModule } from './modules/client/client.module';
 import { AtStrategy } from 'src/shared/strategies/at.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from 'src/shared/guard';
+import { NodemailerModule } from './shared/components/nodemailer/nodemailer.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AtGuard } from 'src/shared/guard';
     RedisModule,
     SharedModule,
     ClientModule,
+    NodemailerModule,
   ],
   controllers: [AppController],
   providers: [
