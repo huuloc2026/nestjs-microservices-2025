@@ -1,6 +1,6 @@
 import { Global, Module, Provider } from '@nestjs/common';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
-import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
+import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-prisma';
 @Global()
 @Module({
   providers: [BaseRepositoryPrisma, PrismaService],

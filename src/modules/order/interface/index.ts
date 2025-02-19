@@ -5,7 +5,7 @@ import { OrderRepository } from 'src/modules/order/infras/port/order.repo';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { PagingSchemaDTO } from 'src/shared/data-model';
 import { ModelName } from 'src/shared/modelName';
-import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
+import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-prisma';
 import { BaseUseCase, IBaseUseCase } from 'src/shared/services/base-usecase';
 import { FindAllResponse } from 'src/shared/types/common.types';
 

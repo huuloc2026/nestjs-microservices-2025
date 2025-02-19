@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ICLIENT_REPOSITORY } from '../../core/port/client.repository';
+import { ICLIENT_REPOSITORY } from '../../core/port/client.repo.interface';
 import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { ClientEntity } from 'src/modules/client/core/entities/client.entity';
 import { $Enums } from '@prisma/client';

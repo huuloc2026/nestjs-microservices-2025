@@ -21,4 +21,5 @@ export class ModelName {
   static Permission = 'permission';
   static Cart = 'cart';
   static CartItem = 'cartItem';
+  static Client = 'client';
 }

@@ -3,7 +3,7 @@ import { CreateProductDto } from 'src/modules/product/dto/create-product.dto';
 import { UpdateProductDto } from 'src/modules/product/dto/update-product.dto';
 import { PagingSchemaDTO } from 'src/shared/data-model';
 import { IRepository } from 'src/shared/interface/interface';
-import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
+import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-prisma';
 import { FindAllResponse } from 'src/shared/types/common.types';
 
 export interface IProductUseCase {

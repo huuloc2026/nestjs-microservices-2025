@@ -8,7 +8,7 @@ import {
 } from 'src/modules/product/interface';
 import { NotfoundProduct } from 'src/modules/product/usecase/error';
 import { PagingSchemaDTO } from 'src/shared/data-model';
-import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
+import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-prisma';
 import { FindAllResponse } from 'src/shared/types/common.types';
 @Injectable()
 export class ProductUseCase implements IProductUseCase {

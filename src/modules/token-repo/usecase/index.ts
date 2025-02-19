@@ -1,6 +1,6 @@
 import { TokenUser } from '@prisma/client';
 import { PagingSchemaDTO } from 'src/shared/data-model';
-import { BaseRepositoryPrisma } from 'src/shared/repository/baserepo-prisma';
+import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-prisma';
 import { FindAllResponse } from 'src/shared/types/common.types';
 
 export interface ITokenUseCase<T> {

@@ -8,37 +8,38 @@ import {
   Delete,
   Inject,
 } from '@nestjs/common';
-import { ClientService } from '../../application/client.service';
+
 import { CLIENT_SERVICE } from 'src/modules/client/client-di';
+import { IClientService } from 'src/modules/client/core/port/client.service.interface';
 
 @Controller('clients')
 export class ClientController {
   constructor(
-    @Inject(CLIENT_SERVICE) private readonly clientService: ClientService,
+    @Inject(CLIENT_SERVICE) private readonly clientService: IClientService,
   ) {}
 
   @Post()
   async create(@Body() dto: any) {
-    return this.clientService.createClient(dto.name, dto.email, dto.password);
+    return this.clientService.create(dto.name);
   }
 
   @Get()
   async findAll() {
-    return this.clientService.getAllClients();
+    return this.clientService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.clientService.getClientById(id);
+    return this.clientService.findOneById(id);
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: any) {
-    return this.clientService.updateClient(id, dto);
+    return this.clientService.update(id, dto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.clientService.deleteClient(id);
+    return this.clientService.remove(id);
   }
 }
