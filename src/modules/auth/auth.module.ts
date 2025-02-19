@@ -13,6 +13,7 @@ import {
 } from 'src/modules/client/client-di';
 import { PrismaClientRepository } from 'src/modules/client/infrastructure/prisma/client.prisma.repo';
 import { ClientService } from 'src/modules/client/application/client.service';
+import { RedisModule } from 'src/shared/components/redis/redis.module';
 
 const repositories: Provider[] = [
   { provide: CLIENT_REPOSITORY, useClass: PrismaClientRepository },
@@ -30,6 +31,7 @@ const services: Provider[] = [
     UserModule,
     CommonModule,
     TokenRepoModule,
+    RedisModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService],

@@ -13,6 +13,8 @@ import { AuthService } from 'src/modules/auth/auth.service';
 import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
 import { USER_SERVICE } from 'src/modules/user/interface/user-di.token';
 import { UserService } from 'src/modules/user/user.service';
+import { KEY_PREFIX } from 'src/shared/components/redis/constants';
+import { RedisService } from 'src/shared/components/redis/redis.service';
 import { TokenPayload } from 'src/shared/interface/interface';
 
 @Injectable()
@@ -21,6 +23,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
     private config: ConfigService,
     @Inject(USER_SERVICE) private userService: UserService,
     private tokenService: TokenRepoService,
+    private redisService: RedisService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -29,13 +32,20 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
   async validate(payload: TokenPayload) {
     // check in Token Repository
-    const checkKeyExist = await this.tokenService.CheckKeyValid(payload.sub);
-    if (!checkKeyExist) {
-      Logger.warn('Token not found for user', 'AtStrategy');
+    const key = `${KEY_PREFIX}${payload.sub}`;
+    const tokenData = await this.redisService.get<string>(key);
+    if (!tokenData) {
+      Logger.warn(`Token not found for user ${payload.sub}`, 'AtStrategy');
       throw new UnauthorizedException('Invalid or expired token');
     }
     // get User
     const user = await this.userService.profile(payload.email);
-    return user; // Passport will attach this user to req.user
+    const data: TokenPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    Logger.log('Passed Guard', 'AtStrategy');
+    return data; // Passport will attach this user to req.user
   }
 }

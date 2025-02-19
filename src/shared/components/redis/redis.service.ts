@@ -6,12 +6,116 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import { KEY_PREFIX } from 'src/shared/components/redis/constants';
 
 @Injectable()
 export class RedisService {
   private logger = new Logger(RedisService.name);
-  private readonly KEY_PREFIX = 'NESTJS::GLOBAL';
+  private readonly KEY_PREFIX = KEY_PREFIX;
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+
+  async onModuleInit() {
+    await this.checkRedisConnection();
+  }
+
+  /**
+   * Check Redis connection status
+   */
+  async checkRedisConnection(): Promise<void> {
+    try {
+      const redisClient = (this.cacheManager as any).store.getClient();
+      await redisClient.ping(); // Redis PING command
+      this.logger.log('✅ Redis connection is healthy.');
+    } catch (error) {
+      this.logger.error('❌ Failed to connect to Redis', error);
+      throw new InternalServerErrorException('Failed to connect to Redis');
+    }
+  }
+  /**
+   * Store an access token in Redis
+   * @param userId - User's unique ID
+   * @param token - Access token
+   * @param ttl - Expiration time in seconds (default: 1 hour)
+   */
+  async saveAccessToken(
+    userId: string,
+    token: string,
+    ttl: number,
+  ): Promise<void> {
+    try {
+      const key = this.KEY_PREFIX + userId;
+      await this.cacheManager.set(key, token, ttl);
+      this.logger.log(`✅ Access token stored for user: ${userId}`);
+    } catch (error) {
+      this.logger.error(
+        `❌ Failed to store access token for user: ${userId}`,
+        error,
+      );
+      throw new InternalServerErrorException('Error saving access token');
+    }
+  }
+
+  /**
+   * Retrieve an access token from Redis
+   * @param userId - User's unique ID
+   * @returns Access token or undefined if not found
+   */
+  async getAccessToken(userId: string): Promise<string | undefined> {
+    try {
+      const key = this.KEY_PREFIX + userId;
+      const token = await this.cacheManager.get<string>(key);
+      if (token) {
+        this.logger.log(`🔍 Access token found for user: ${userId}`);
+      } else {
+        this.logger.warn(`⚠️ No access token found for user: ${userId}`);
+      }
+      return token;
+    } catch (error) {
+      this.logger.error(
+        `❌ Failed to retrieve access token for user: ${userId}`,
+        error,
+      );
+      throw new InternalServerErrorException('Error retrieving access token');
+    }
+  }
+
+  /**
+   * Delete an access token (Logout)
+   * @param userId - User's unique ID
+   */
+  async deleteAccessToken(userId: string): Promise<void> {
+    try {
+      const key = this.KEY_PREFIX + userId;
+      await this.cacheManager.del(key);
+      this.logger.log(`🗑️ Access token deleted for user: ${userId}`);
+    } catch (error) {
+      this.logger.error(
+        `❌ Failed to delete access token for user: ${userId}`,
+        error,
+      );
+      throw new InternalServerErrorException('Error deleting access token');
+    }
+  }
+
+  /**
+   * Invalidate all tokens for a specific user (useful if multiple devices)
+   * @param userId - User's unique ID
+   */
+  async invalidateUserSessions(userId: string): Promise<void> {
+    try {
+      const keys = await this.findKeys(userId); // Find all sessions
+      await this.deleteMany(keys);
+      this.logger.warn(`⚠️ Invalidated all sessions for user: ${userId}`);
+    } catch (error) {
+      this.logger.error(
+        `❌ Failed to invalidate sessions for user: ${userId}`,
+        error,
+      );
+      throw new InternalServerErrorException(
+        'Error invalidating user sessions',
+      );
+    }
+  }
 
   /**
    * Store data in Redis cache

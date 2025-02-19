@@ -22,6 +22,7 @@ import {
 } from 'src/modules/auth/dto/changepasswordDTO';
 import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
 import { AuthAbstractService } from 'src/modules/auth/interface';
+import { RedisService } from 'src/shared/components/redis/redis.service';
 
 @Injectable()
 export class AuthService extends AuthAbstractService {
@@ -31,6 +32,7 @@ export class AuthService extends AuthAbstractService {
     private readonly configService: ConfigService,
     private commonService: CommonService,
     private TokenService: TokenRepoService,
+    private redisService: RedisService,
   ) {
     super();
   }
@@ -83,13 +85,16 @@ export class AuthService extends AuthAbstractService {
     //await this.TokenService.CheckManyTokenStored(user.id);
 
     // // stored token
-    await this.TokenService.storeToken(user.id, accessToken, refreshToken);
+    //await this.TokenService.storeToken(user.id, accessToken, refreshToken);
+    await this.redisService.saveAccessToken(user.id, accessToken, 3600000);
 
     return { accessToken, refreshToken };
   }
 
-  async logout(id: string): Promise<Boolean> {
-    return await this.TokenService.DeleteAllTokenOfUser(id);
+  async logout(id: string): Promise<any> {
+    console.log(id);
+    return await this.redisService.deleteAccessToken(id);
+    //return await this.TokenService.DeleteAllTokenOfUser(id);
   }
 
   private async verifyPlainContentWithHashedContent(
