@@ -11,6 +11,11 @@ async function bootstrap() {
   const link_swagger = 'swaggerui';
   app.setGlobalPrefix('v1/api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.enableCors({
+    origin: '*', // Hoặc chỉ định frontend của bạn
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  });
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
   SwaggerModule.setup(link_swagger, app, document);
   Logger.log(`Check source at ${link_infor} ✅`);

@@ -1,10 +1,11 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export const SwaggerConfig = new DocumentBuilder()
-  .setTitle('Ecommerce Project') // Set the title of the API
+  .setTitle('Ecommerce Project - Huu Loc ') // Set the title of the API
   .setDescription('Ecommerce API description') // Set the description of the API
   .setVersion('0.1') // Set the version of the API
   .setBasePath('/v1/api')
+  .setContact('Huuloc206', 'github.com/huuloc206', 'huuloc2026@gmail.com')
   .addBearerAuth(
     {
       type: 'http',

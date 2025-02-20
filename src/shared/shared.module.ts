@@ -16,6 +16,7 @@ import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-pris
     PrismaService,
     NodemailerService,
     RedisService,
+
     // sendEmailProcessor,
   ],
   exports: [
