@@ -17,6 +17,7 @@ This project demonstrates a clean and maintainable e-commerce API built with Nes
 - [Project Structure](#project-structure)
 - [Testing](#testing)
 - [Further Development](#further-development)
+- [ScreenShot](#screenshot)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -53,23 +54,40 @@ The application is structured around the following layers:
 
 1. Clone the repository:
 
-   ```bash
-   git clone [https://github.com/huuloc2026/nestjs-microservices-2025](https://github.com/huuloc2026/nestjs-microservices-2025)
-   ```
+```bash
+git clone [https://github.com/huuloc2026/nestjs-microservices-2025](https://github.com/huuloc2026/nestjs-microservices-2025)
+```
 
-   Install dependencies:
+Install dependencies:
 
-   ```
-   npm install
-   ```
+```
+npm install
+```
 
 2. Configure environment variables:
 
-   Create a .env file in the root directory and add the necessary environment variables 1 (e.g., database connection string, JWT secret). See .env.example for a template.  
+Create a .env file in the root directory and add the necessary environment variables 1 (e.g., database connection string, JWT secret). See .env.example for a template.  
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`API_KEY=`
+```
+#Mail
+MAIL_SERVICE=
+MAIL_HOST=
+MAIL_PORT=
+MAIL_SECURE=
+MAIL_USER=
+MAIL_PASS=
+MAIL_FROM=
+
+#Redis
+CACHE_URL=
+CACHE_TTL=
+CACHE_HOST=
+CACHE_PORT=
+CACHE_username=
+CACHE_password=
+```
 
 3. Run database migrations:
 
@@ -114,6 +132,13 @@ npm run test
 - **Implement API documentation (e.g., using Swagger).**
 - **Explore different database options.**
 - **Implement proper authentication and authorization.**
+
+## ScreenShot
+
+![App Screenshot](screenshot/swagger-ui.png)
+![App Screenshot](screenshot/bullboard.png)
+![App Screenshot](screenshot/sendEmail-Bull.png)
+![App Screenshot](screenshot/cached-token.png)
 
 ## Contributing
 
