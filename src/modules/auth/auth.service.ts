@@ -23,6 +23,9 @@ import {
 import { TokenRepoService } from 'src/modules/token-repo/token-repo.service';
 import { AuthAbstractService } from 'src/modules/auth/interface';
 import { RedisService } from 'src/shared/components/redis/redis.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { QUEUENAME } from 'src/shared/components/bullmq/constants';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class AuthService extends AuthAbstractService {
@@ -33,6 +36,8 @@ export class AuthService extends AuthAbstractService {
     private commonService: CommonService,
     private TokenService: TokenRepoService,
     private redisService: RedisService,
+    @InjectQueue(QUEUENAME.sendEmail)
+    private readonly sendEmailServiceBullMQ: Queue,
   ) {
     super();
   }
@@ -55,6 +60,11 @@ export class AuthService extends AuthAbstractService {
     };
     // insert new user
     const user = await this.userService.create(newUserInfor);
+    // send OTP to email
+    //#TODO:  hardcore email to test const toEmailService = user.email
+
+    const EmailReceiver = 'huuloc2026@gmail.com';
+    await this.sendEmailServiceBullMQ.add(EmailReceiver, newOTP);
     // return user infor basic
     return this.commonService.getUserOmitPassword(user);
   }

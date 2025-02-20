@@ -14,6 +14,13 @@ import {
 import { PrismaClientRepository } from 'src/modules/client/infrastructure/prisma/client.prisma.repo';
 import { ClientService } from 'src/modules/client/application/client.service';
 import { RedisModule } from 'src/shared/components/redis/redis.module';
+import { BullModule } from '@nestjs/bullmq';
+import {
+  QUEUENAME,
+  SEND_EMAIL_QUEUENAME,
+} from 'src/shared/components/bullmq/constants';
+import { sendEmailProcessor } from 'src/shared/components/bullmq/queues/send-email.process';
+import { NodemailerService } from 'src/shared/components/nodemailer/nodemailer.service';
 
 const repositories: Provider[] = [
   { provide: CLIENT_REPOSITORY, useClass: PrismaClientRepository },
@@ -28,12 +35,15 @@ const services: Provider[] = [
     JwtModule.register({
       global: true,
     }),
+    BullModule.registerQueue({
+      name: QUEUENAME.sendEmail,
+      prefix: '::User',
+    }),
     UserModule,
     CommonModule,
     TokenRepoModule,
-    RedisModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService],
+  providers: [AuthService, UserService, sendEmailProcessor],
 })
 export class AuthModule {}

@@ -32,8 +32,8 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
   async validate(payload: TokenPayload) {
     // check in Token Repository
-    const key = `${KEY_PREFIX}${payload.sub}`;
-    const tokenData = await this.redisService.get<string>(key);
+    // const key = `${KEY_PREFIX}${payload.sub}`;
+    const tokenData = await this.redisService.get<string>(payload.sub);
     if (!tokenData) {
       Logger.warn(`Token not found for user ${payload.sub}`, 'AtStrategy');
       throw new UnauthorizedException('Invalid or expired token');
