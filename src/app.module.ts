@@ -22,6 +22,7 @@ import { AtStrategy } from 'src/shared/strategies/at.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from 'src/shared/guard';
 import { NodemailerModule } from './shared/components/nodemailer/nodemailer.module';
+import { BullmqModule } from './shared/components/bullmq/bullmq.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { NodemailerModule } from './shared/components/nodemailer/nodemailer.modu
     SharedModule,
     ClientModule,
     NodemailerModule,
+    BullmqModule,
   ],
   controllers: [AppController],
   providers: [
