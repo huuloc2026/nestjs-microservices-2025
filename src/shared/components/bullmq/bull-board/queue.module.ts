@@ -26,13 +26,15 @@ import { QUEUENAME } from 'src/shared/components/bullmq/constants';
 export class UIBullBoardModule implements OnModuleInit, NestModule {
   private readonly serverAdapter = new ExpressAdapter();
   private readonly logger = new Logger('::::BullBoardModule:::');
+  private readonly port = process.env.APP_PORT;
+  private readonly global_preflix = process.env.GLOBAL_PREFLX;
 
   constructor(
     @InjectQueue(QUEUENAME.sendEmail) private readonly emailQueue: Queue,
   ) {}
 
   onModuleInit() {
-    this.serverAdapter.setBasePath('/v1/api/queues');
+    this.serverAdapter.setBasePath(`/${this.global_preflix}/queues`);
 
     createBullBoard({
       queues: [new BullMQAdapter(this.emailQueue)],
@@ -40,7 +42,7 @@ export class UIBullBoardModule implements OnModuleInit, NestModule {
     });
 
     this.logger.log(
-      '✅ Bull Board UI is available at http://localhost:8386/v1/api/queues',
+      `✅ Bull Board UI is available at http://localhost:${this.port}/${this.global_preflix}/queues`,
     );
   }
 

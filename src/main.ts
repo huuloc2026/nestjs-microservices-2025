@@ -7,12 +7,13 @@ import { SwaggerConfig } from 'src/shared/components/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.APP_PORT;
+  const global_preflix = process.env.GLOBAL_PREFLX;
   const link_infor = process.env.linkgithub;
   const link_swagger = 'swaggerui';
-  app.setGlobalPrefix('v1/api');
+  app.setGlobalPrefix(global_preflix);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.enableCors({
-    origin: '*', // Hoặc chỉ định frontend của bạn
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
   });

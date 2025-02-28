@@ -45,6 +45,10 @@ export class ProductUseCase implements IProductUseCase {
     options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<Product>> {
     filter = { ...filter, status: 'ACTIVE' };
+    options = {
+      ...options,
+      orderBy: { createdAt: 'desc' },
+    };
     return await this.repository.list(filter, options);
   }
   async softdelete(id: string): Promise<Product> {

@@ -30,6 +30,9 @@ export class PagingSchemaDTO {
   @ClassTransformerTransform(({ value }) => parseInt(value, 10))
   limit: number = 10;
 
+  @IsOptional()
+  orderBy?: Record<string, 'asc' | 'desc'>;
+
   @IsNumber()
   @IsOptional()
   @ClassTransformerTransform(({ value }) => parseInt(value, 10))

@@ -31,15 +31,15 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.userService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.userService.findAll();
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UserUpdateDTO) {
-  //   return this.userService.update(id, updateUserDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UserUpdateDTO) {
+    return this.userService.update(id, updateUserDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

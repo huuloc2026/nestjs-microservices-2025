@@ -55,13 +55,15 @@ The application is structured around the following layers:
 1. Clone the repository:
 
 ```bash
-git clone [https://github.com/huuloc2026/nestjs-microservices-2025](https://github.com/huuloc2026/nestjs-microservices-2025)
+git clone https://github.com/huuloc2026/nestjs-microservices-2025
 ```
 
 Install dependencies:
 
 ```
 npm install
+#or
+yarn install
 ```
 
 2. Configure environment variables:
@@ -121,7 +123,6 @@ Access the API at http://localhost:3000.
 Run unit and integration tests:
 
 ```
-
 npm run test
 ```
 
@@ -147,8 +148,6 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## License
 
 MIT
-
-This improved README provides a comprehensive guide to your project, making it easier for others (and your future self) to understand, use, and contribute to it. Remember to fill in the placeholders (e.g., technologies used, specific features) with the details of your project.
 
 ## Authors
 

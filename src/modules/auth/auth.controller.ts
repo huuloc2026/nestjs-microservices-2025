@@ -70,6 +70,7 @@ export class AuthController {
   }
 
   @Post('verify')
+  @Public()
   @HttpCode(HttpStatus.OK)
   verify(@Body() data: UserVerifyDTO) {
     return this.authService.verifyAccount(data.email, data.verifyCode);

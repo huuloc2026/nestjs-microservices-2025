@@ -45,7 +45,7 @@ export class CommonService {
    * @returns User with essential data
    */
   getEssentialUserData(user: User) {
-    return pick(user, ['id', 'email', 'role']);
+    return pick(user, ['id', 'name', 'email', 'role']);
   }
   /**
    *
