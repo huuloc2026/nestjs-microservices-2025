@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Inject,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -33,8 +34,15 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('sortBy') sortBy: string = 'createdAt',
+    @Query('order') order: string = 'desc',
+  ) {
+    page = Math.max(1, page);
+    limit = Math.max(1, limit);
+    return this.userService.findAll({}, { page, limit });
   }
 
   @Put(':id')

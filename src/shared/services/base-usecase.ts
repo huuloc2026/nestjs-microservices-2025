@@ -33,13 +33,22 @@ export abstract class BaseUseCase<T> implements IBaseUseCase<T> {
 
   async findAll(
     filter: object = {},
-    options?: PagingSchemaDTO,
+    options?: PagingSchemaDTO & { sortBy?: string; order?: 'asc' | 'desc' },
   ): Promise<FindAllResponse<T>> {
-    const { page = 1, limit = 10 } = options || {};
-
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      order = 'desc',
+    } = options || {};
+    const allowedFields = ['createdAt'];
+    if (!allowedFields.includes(sortBy)) {
+      throw new Error(`Invalid sortBy field: ${sortBy}`);
+    }
     const [data, total] = await this.prisma.$transaction([
       this.getModel().findMany({
         where: filter,
+        orderBy: { [sortBy]: order },
         take: limit,
         skip: (page - 1) * limit,
       }),
