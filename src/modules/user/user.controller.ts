@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -27,7 +28,7 @@ export class UserController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: any) {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -36,8 +37,9 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UserUpdateDTO) {
+    console.log(id, updateUserDto);
     return this.userService.update(id, updateUserDto);
   }
 

@@ -8,6 +8,7 @@ import {
   USER_SERVICE,
 } from 'src/modules/user/interface/user-di.token';
 import { PrismaClientRepository } from 'src/modules/client/infrastructure/prisma/client.prisma.repo';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 const repositories: Provider[] = [
   { provide: USER_REPOSITORY, useClass: PrismaClientRepository },

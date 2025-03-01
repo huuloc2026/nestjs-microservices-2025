@@ -44,7 +44,10 @@ export class ProductUseCase implements IProductUseCase {
     filter?: object,
     options?: PagingSchemaDTO,
   ): Promise<FindAllResponse<Product>> {
-    filter = { ...filter, status: 'ACTIVE' };
+    filter = {
+      ...filter,
+      status: 'ACTIVE'
+    };
     options = {
       ...options,
       orderBy: { createdAt: 'desc' },
