@@ -10,6 +10,7 @@ import {
   IsUrl,
   MaxLength,
 } from 'class-validator';
+import { CategoryName } from 'src/modules/category/dto/category.enum';
 import { ModelName } from 'src/shared/modelName';
 
 export class ProductSchema {
@@ -41,7 +42,7 @@ export class ProductSchema {
 
   @IsOptional()
   @IsString({ message: 'Category ID must be a string' })
-  categoryId?: string;
+  categoryId: string;
 
   @IsEnum(BaseStatus, { message: 'Invalid status' })
   status: BaseStatus = BaseStatus.ACTIVE; // Default value as in your schema

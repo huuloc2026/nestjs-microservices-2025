@@ -23,6 +23,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from 'src/shared/guard';
 import { NodemailerModule } from './shared/components/nodemailer/nodemailer.module';
 import { BullmqModule } from './shared/components/bullmq/bullmq.module';
+import { CategoryFactory } from './modules/category/category.factory';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { BullmqModule } from './shared/components/bullmq/bullmq.module';
   providers: [
     AppService,
     PrismaService,
+    CategoryFactory,
     AtStrategy,
     {
       provide: APP_GUARD,

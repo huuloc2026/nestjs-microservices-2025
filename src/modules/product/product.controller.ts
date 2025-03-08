@@ -13,15 +13,16 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { PagingSchemaDTO } from 'src/shared/data-model';
+import { CreateProductDto } from './dto/create-product.dto';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProductDto: any) {
-    return this.productService.create(createProductDto);
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productService.createNewProduct(createProductDto);
   }
 
   @Get()
