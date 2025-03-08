@@ -97,8 +97,8 @@ export class AuthService extends AuthAbstractService {
     // // stored token
     //await this.TokenService.storeToken(user.id, accessToken, refreshToken);
     await this.redisService.saveAccessToken(user.id, accessToken, 3600000);
-
-    return { accessToken, refreshToken };
+    const returnData = await this.commonService.getEssentialUserData(user)
+    return { user:returnData,accessToken, refreshToken };
   }
 
   async logout(id: string): Promise<any> {
