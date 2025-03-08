@@ -33,6 +33,17 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async findUserById(
+    @Param('id') id:string
+  ) {
+    console.log(id);
+    
+    return await this.userService.findOneById(id)
+  }
+
+
   @Get()
   async findAll(
     @Query('page') page: number = 1,
@@ -47,7 +58,7 @@ export class UserController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UserUpdateDTO) {
-    console.log(id, updateUserDto);
+   
     return this.userService.update(id, updateUserDto);
   }
 

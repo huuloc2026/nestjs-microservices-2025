@@ -13,10 +13,12 @@ async function bootstrap() {
   app.setGlobalPrefix(global_preflix);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:3000', 
+    credentials: true, 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
   });
+  
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
   SwaggerModule.setup(link_swagger, app, document);
   Logger.log(`Check source at ${link_infor} ✅`);
