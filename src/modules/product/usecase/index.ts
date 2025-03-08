@@ -21,6 +21,7 @@ export class ProductUseCase implements IProductUseCase {
   ) {}
 
   async create(product: CreateProductDto): Promise<Product> {
+    console.log(product);
     return await this.repository.insert(product);
   }
 
