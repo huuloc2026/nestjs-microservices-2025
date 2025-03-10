@@ -58,6 +58,10 @@ export class UserModel implements PrismaUser {
 
   @Expose()
   @IsOptional()
+  stripeCustomerId: string;
+
+  @Expose()
+  @IsOptional()
   avatar: string;
 
   @Expose()

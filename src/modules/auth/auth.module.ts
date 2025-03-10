@@ -21,6 +21,7 @@ import {
 } from 'src/shared/components/bullmq/constants';
 import { sendEmailProcessor } from 'src/shared/components/bullmq/queues/send-email.process';
 import { NodemailerService } from 'src/shared/components/nodemailer/nodemailer.service';
+import { SharedModule } from 'src/shared/shared.module';
 
 const repositories: Provider[] = [
   { provide: CLIENT_REPOSITORY, useClass: PrismaClientRepository },
@@ -42,6 +43,7 @@ const services: Provider[] = [
     UserModule,
     CommonModule,
     TokenRepoModule,
+    SharedModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, sendEmailProcessor],

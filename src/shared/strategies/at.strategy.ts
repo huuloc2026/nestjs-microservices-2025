@@ -39,13 +39,13 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException('Invalid or expired token');
     }
     // get User
-    const user = await this.userService.profile(payload.email);
-    const data: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
+    const userInfo = await this.userService.profile(payload.email);
+    const user: TokenPayload = {
+      sub: userInfo.id,
+      email: userInfo.email,
+      role: userInfo.role,
     };
     Logger.log('Passed Guard', 'AtStrategy');
-    return data; // Passport will attach this user to req.user
+    return user; // Passport will attach this user to req.user
   }
 }

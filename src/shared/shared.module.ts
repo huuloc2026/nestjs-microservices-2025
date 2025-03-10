@@ -7,16 +7,18 @@ import { PrismaService } from 'src/shared/components/prisma/prisma.service';
 import { RedisModule } from 'src/shared/components/redis/redis.module';
 import { RedisService } from 'src/shared/components/redis/redis.service';
 import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-prisma';
+import { StripeModule } from './components/stripe/stripe.module';
+import { StripeService } from './components/stripe/stripe.service';
 
 @Global()
 @Module({
-  imports: [RedisModule, BullmqModule, NodemailerModule],
+  imports: [RedisModule, BullmqModule, NodemailerModule,StripeModule],
   providers: [
     BaseRepositoryPrisma,
     PrismaService,
     NodemailerService,
     RedisService,
-
+    StripeService,
     // sendEmailProcessor,
   ],
   exports: [
@@ -24,6 +26,7 @@ import { BaseRepositoryPrisma } from 'src/shared/repository/base.repository-pris
     PrismaService,
     NodemailerService,
     RedisService,
+
     // sendEmailProcessor,
   ],
 })

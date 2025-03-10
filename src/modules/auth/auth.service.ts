@@ -26,6 +26,7 @@ import { RedisService } from 'src/shared/components/redis/redis.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { QUEUENAME } from 'src/shared/components/bullmq/constants';
 import { Queue } from 'bullmq';
+import { StripeService } from 'src/shared/components/stripe/stripe.service';
 
 @Injectable()
 export class AuthService extends AuthAbstractService {
@@ -38,6 +39,7 @@ export class AuthService extends AuthAbstractService {
     private redisService: RedisService,
     @InjectQueue(QUEUENAME.sendEmail)
     private readonly sendEmailServiceBullMQ: Queue,
+    
   ) {
     super();
   }
@@ -48,6 +50,8 @@ export class AuthService extends AuthAbstractService {
     if (existingUser) {
       throw new ForbiddenException('Email already exists');
     }
+
+    
     //generate salt, otp
     const salt = await this.commonService.generateSalt();
     const newOTP = this.commonService.generateOTP();

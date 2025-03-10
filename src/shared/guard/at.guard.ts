@@ -35,6 +35,7 @@ export class AtGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
     status?: any,
   ) {
+    
     if (err || !user) {
       if (info?.name === 'TokenExpiredError') {
         this.logger.warn('Access token has expired');
@@ -51,8 +52,9 @@ export class AtGuard extends AuthGuard('jwt') {
       this.logger.warn('Access token is missing or user not authenticated');
       throw new UnauthorizedException('Authentication failed');
     }
+   
 
-    this.logger.log(`User authenticated: ${user.id}`);
+    this.logger.log(`User authenticated: ${user.sub}`);
     return user;
   }
 }

@@ -24,6 +24,7 @@ import { AtGuard } from 'src/shared/guard';
 import { NodemailerModule } from './shared/components/nodemailer/nodemailer.module';
 import { BullmqModule } from './shared/components/bullmq/bullmq.module';
 import { CategoryFactory } from './modules/category/category.factory';
+import { StripeModule } from './shared/components/stripe/stripe.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { CategoryFactory } from './modules/category/category.factory';
     ClientModule,
     NodemailerModule,
     BullmqModule,
+    StripeModule
   ],
   controllers: [AppController],
   providers: [
